@@ -83,7 +83,16 @@ class _RoutesPageState extends State<RoutesPage> {
           return BottomSheet(
               onClosing: () {},
               builder: (BuildContext context) {
-                return Container();
+                return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    children: [
+                      _handleTextFields(),
+                      _handleSliders(),
+                      _handleButtons()
+                    ],
+                  ),
+                );
               });
         });
   }
@@ -95,14 +104,14 @@ class _RoutesPageState extends State<RoutesPage> {
           obscureText: true,
           decoration: InputDecoration(
             border: OutlineInputBorder(),
-            labelText: 'Password',
+            labelText: 'Inicio',
           ),
         ),
         TextField(
           obscureText: true,
           decoration: InputDecoration(
             border: OutlineInputBorder(),
-            labelText: 'Password',
+            labelText: 'Destino',
           ),
         ),
       ],
@@ -111,7 +120,10 @@ class _RoutesPageState extends State<RoutesPage> {
 
   Widget _handleSliders() {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        Text("Prioridade"),
+        Text("Menor Distancia"),
         Slider(
           value: 10,
           max: 100,
@@ -119,6 +131,15 @@ class _RoutesPageState extends State<RoutesPage> {
           label: "sla",
           onChanged: (double value) {},
         ),
+        Text("Poucas Paradas"),
+        Slider(
+          value: 10,
+          max: 100,
+          divisions: 5,
+          label: "sla",
+          onChanged: (double value) {},
+        ),
+        Text("Passagem Barata"),
         Slider(
           value: 10,
           max: 100,
@@ -132,18 +153,19 @@ class _RoutesPageState extends State<RoutesPage> {
 
   Widget _handleButtons() {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         ElevatedButton(
           style: ElevatedButton.styleFrom(
               textStyle: const TextStyle(fontSize: 20)),
           onPressed: null,
-          child: const Text('Disabled'),
+          child: const Text('Cancelar'),
         ),
         ElevatedButton(
           style: ElevatedButton.styleFrom(
               textStyle: const TextStyle(fontSize: 20)),
           onPressed: null,
-          child: const Text('Disabled'),
+          child: const Text('Okay'),
         ),
       ],
     );
