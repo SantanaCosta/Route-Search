@@ -13,15 +13,14 @@ class RoutesPage extends StatefulWidget {
 }
 
 class _RoutesPageState extends State<RoutesPage> {
+  final vertex1 = Vertex(x: 50, y: 50);
+  final vertex2 = Vertex(x: 200, y: 200);
+  final vertex3 = Vertex(x: 350, y: 50);
+  final vertex4 = Vertex(x: 500, y: 200);
+  final vertex5 = Vertex(x: 650, y: 50);
+  final vertex6 = Vertex(x: 800, y: 200);
   @override
   Widget build(BuildContext context) {
-    final vertex1 = Vertex(x: 50, y: 50);
-    final vertex2 = Vertex(x: 200, y: 200);
-    final vertex3 = Vertex(x: 350, y: 50);
-    final vertex4 = Vertex(x: 500, y: 200);
-    final vertex5 = Vertex(x: 650, y: 50);
-    final vertex6 = Vertex(x: 800, y: 200);
-
     final graph = Graph(vertices: [
       vertex1,
       vertex2,
@@ -81,10 +80,11 @@ class _RoutesPageState extends State<RoutesPage> {
         context: context,
         builder: (BuildContext context) {
           return BottomSheet(
+              enableDrag: false,
               onClosing: () {},
               builder: (BuildContext context) {
                 return Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.all(6.0),
                   child: Column(
                     children: [
                       _handleTextFields(),
@@ -100,18 +100,24 @@ class _RoutesPageState extends State<RoutesPage> {
   Widget _handleTextFields() {
     return Column(
       children: const [
-        TextField(
-          obscureText: true,
-          decoration: InputDecoration(
-            border: OutlineInputBorder(),
-            labelText: 'Inicio',
+        Padding(
+          padding: EdgeInsets.all(2.0),
+          child: TextField(
+            obscureText: true,
+            decoration: InputDecoration(
+              border: OutlineInputBorder(),
+              labelText: 'Inicio',
+            ),
           ),
         ),
-        TextField(
-          obscureText: true,
-          decoration: InputDecoration(
-            border: OutlineInputBorder(),
-            labelText: 'Destino',
+        Padding(
+          padding: EdgeInsets.all(2.0),
+          child: TextField(
+            obscureText: true,
+            decoration: InputDecoration(
+              border: OutlineInputBorder(),
+              labelText: 'Destino',
+            ),
           ),
         ),
       ],
@@ -122,30 +128,75 @@ class _RoutesPageState extends State<RoutesPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text("Prioridade"),
-        Text("Menor Distancia"),
-        Slider(
-          value: 10,
-          max: 100,
-          divisions: 5,
-          label: "sla",
-          onChanged: (double value) {},
+        const Text(
+          "Prioridade",
+          style: TextStyle(fontSize: 20),
         ),
-        Text("Poucas Paradas"),
-        Slider(
-          value: 10,
-          max: 100,
-          divisions: 5,
-          label: "sla",
-          onChanged: (double value) {},
+        const Text(
+          "Menor Distancia",
+          style: TextStyle(fontSize: 14),
         ),
-        Text("Passagem Barata"),
-        Slider(
-          value: 10,
-          max: 100,
-          divisions: 5,
-          label: "sla",
-          onChanged: (double value) {},
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Slider(
+              value: 10,
+              max: 100,
+              divisions: 5,
+              label: "sla",
+              onChanged: (double value) {},
+            ),
+            Container(
+              height: 20,
+              width: 50,
+              color: Colors.grey[300],
+              child: const Center(child: Text("10")),
+            )
+          ],
+        ),
+        const Text(
+          "Poucas paradas",
+          style: TextStyle(fontSize: 14),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Slider(
+              value: 10,
+              max: 100,
+              divisions: 5,
+              label: "sla",
+              onChanged: (double value) {},
+            ),
+            Container(
+              height: 20,
+              width: 50,
+              color: Colors.grey[300],
+              child: const Center(child: Text("10")),
+            )
+          ],
+        ),
+        const Text(
+          "Passagem Barata",
+          style: TextStyle(fontSize: 14),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Slider(
+              value: 10,
+              max: 100,
+              divisions: 5,
+              label: "sla",
+              onChanged: (double value) {},
+            ),
+            Container(
+              height: 20,
+              width: 50,
+              color: Colors.grey[300],
+              child: const Center(child: Text("10")),
+            )
+          ],
         ),
       ],
     );
@@ -153,18 +204,18 @@ class _RoutesPageState extends State<RoutesPage> {
 
   Widget _handleButtons() {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         ElevatedButton(
           style: ElevatedButton.styleFrom(
               textStyle: const TextStyle(fontSize: 20)),
-          onPressed: null,
+          onPressed: () {},
           child: const Text('Cancelar'),
         ),
         ElevatedButton(
           style: ElevatedButton.styleFrom(
               textStyle: const TextStyle(fontSize: 20)),
-          onPressed: null,
+          onPressed: () {},
           child: const Text('Okay'),
         ),
       ],
