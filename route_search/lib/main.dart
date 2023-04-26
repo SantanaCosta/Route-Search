@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:route_search/view/routes_page.dart';
 import 'package:route_search/view/stations_page.dart';
 import 'view/initial_page.dart';
+import 'view/station_register_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -18,6 +19,10 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: const MyHomePage(title: 'Route Search'),
+      initialRoute: '/',
+      routes: {
+        '/registro': (context) => const StationRegisterPage(),
+      },
     );
   }
 }
