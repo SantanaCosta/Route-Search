@@ -29,8 +29,6 @@ class _StationRegisterPageState extends State<StationRegisterPage> {
         ));
   }
 
-  bool isSwitched = false;
-
   Widget _handleTextFields(BuildContext context) {
     return Column(
       children: [
@@ -40,8 +38,8 @@ class _StationRegisterPageState extends State<StationRegisterPage> {
           labelText: 'Nome da estação',
         )),
         Row(
-          children: [
-            const SizedBox(
+          children: const [
+            SizedBox(
               width: 75,
               child: TextField(
                   decoration: InputDecoration(
@@ -49,8 +47,8 @@ class _StationRegisterPageState extends State<StationRegisterPage> {
                 labelText: 'X',
               )),
             ),
-            const SizedBox(height: 70, width: 10),
-            const SizedBox(
+            SizedBox(height: 70, width: 10),
+            SizedBox(
               width: 75,
               child: TextField(
                   decoration: InputDecoration(
@@ -58,13 +56,6 @@ class _StationRegisterPageState extends State<StationRegisterPage> {
                 labelText: 'Y',
               )),
             ),
-            Switch(
-                value: isSwitched,
-                onChanged: (bool newValue) {
-                  setState(() {
-                    isSwitched = newValue;
-                  });
-                })
           ],
         ),
       ],
@@ -116,6 +107,13 @@ class _StationRegisterPageState extends State<StationRegisterPage> {
           return ListTile(
               title: Text(stations[index]),
               trailing: Row(mainAxisSize: MainAxisSize.min, children: [
+                IconButton(
+                    onPressed: () {
+                      changeButtonColour(index, 0);
+                    },
+                    icon: const Icon(Icons.cancel),
+                    color:
+                        index == line && row == 0 ? Colors.red : Colors.grey),
                 IconButton(
                     onPressed: () {
                       changeButtonColour(index, 1);
