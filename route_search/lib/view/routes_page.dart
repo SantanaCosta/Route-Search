@@ -177,7 +177,7 @@ class _RoutesPageState extends State<RoutesPage> {
           ],
         ),
         const Text(
-          "Passagem Barata",
+          "Rapidez",
           style: TextStyle(fontSize: 14),
         ),
         Row(
