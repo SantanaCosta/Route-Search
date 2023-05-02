@@ -92,10 +92,31 @@ class _StationRegisterPageState extends State<StationRegisterPage> {
   int line = -1;
   int row = -1;
 
+  List<List<Color>> colours =
+      List.generate(5, (index) => [Colors.red, Colors.grey, Colors.grey]);
+
   void changeButtonColour(int index, int icon) {
     setState(() {
       line = index;
       row = icon;
+
+      if (line != -1) {
+        colours[line] = [Colors.grey, Colors.grey, Colors.grey];
+      }
+
+      switch (icon) {
+        case 0:
+          colours[index][0] = Colors.red;
+          break;
+        case 1:
+          colours[index][1] = Colors.green;
+          break;
+        case 2:
+          colours[index][2] = Colors.amber;
+          break;
+        default:
+          colours[index][icon] = Colors.grey;
+      }
     });
   }
 
@@ -112,22 +133,19 @@ class _StationRegisterPageState extends State<StationRegisterPage> {
                       changeButtonColour(index, 0);
                     },
                     icon: const Icon(Icons.cancel),
-                    color:
-                        index == line && row == 0 ? Colors.red : Colors.grey),
+                    color: colours[index][0]),
                 IconButton(
                     onPressed: () {
                       changeButtonColour(index, 1);
                     },
                     icon: const Icon(Icons.check_circle),
-                    color:
-                        index == line && row == 1 ? Colors.green : Colors.grey),
+                    color: colours[index][1]),
                 IconButton(
                     onPressed: () {
                       changeButtonColour(index, 2);
                     },
                     icon: const Icon(Icons.offline_bolt),
-                    color:
-                        index == line && row == 2 ? Colors.amber : Colors.grey),
+                    color: colours[index][2]),
               ]));
         },
       ),
