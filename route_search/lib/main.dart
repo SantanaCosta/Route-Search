@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:route_search/view/routes_page.dart';
 import 'package:route_search/view/stations_page.dart';
 import 'view/initial_page.dart';
@@ -7,7 +8,8 @@ import 'view/station_register_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Hive.openBox("Rotas");
+  final appDocumentDir = await getApplicationDocumentsDirectory();
+  Hive.init(appDocumentDir.path);
   runApp(const MyApp());
 }
 
