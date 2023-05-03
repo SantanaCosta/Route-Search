@@ -13,12 +13,12 @@ class RoutesPage extends StatefulWidget {
 }
 
 class _RoutesPageState extends State<RoutesPage> {
-  final vertex1 = Vertex(x: 50, y: 50);
-  final vertex2 = Vertex(x: 200, y: 200);
-  final vertex3 = Vertex(x: 350, y: 50);
-  final vertex4 = Vertex(x: 500, y: 200);
-  final vertex5 = Vertex(x: 650, y: 50);
-  final vertex6 = Vertex(x: 800, y: 200);
+  final vertex1 = Vertex(x: 0, y: 100);
+  final vertex2 = Vertex(x: -80, y: 80);
+  final vertex3 = Vertex(x: 90, y: 120);
+  final vertex4 = Vertex(x: 185, y: 70);
+  final vertex5 = Vertex(x: 100, y: 50);
+  final vertex6 = Vertex(x: -50, y: 200);
   @override
   Widget build(BuildContext context) {
     final graph = Graph(vertices: [
@@ -177,7 +177,7 @@ class _RoutesPageState extends State<RoutesPage> {
           ],
         ),
         const Text(
-          "Passagem Barata",
+          "Rapidez",
           style: TextStyle(fontSize: 14),
         ),
         Row(
