@@ -21,7 +21,7 @@ class _StationRegisterPageState extends State<StationRegisterPage> {
           child: Column(
             children: [
               _handleTextFields(context),
-              Text('Conexões: '),
+              _handleDescription(context),
               _handleConnectionsList(context),
               _handleSaveButton(context)
             ],
@@ -60,6 +60,52 @@ class _StationRegisterPageState extends State<StationRegisterPage> {
         ),
       ],
     );
+  }
+
+  Widget _handleDescription(BuildContext context) {
+    return Column(children: [
+      const Text(
+        'Conexões com outras estações',
+        style: TextStyle(
+          fontWeight: FontWeight.bold,
+          fontSize: 19,
+        ),
+      ),
+      Row(children: [
+        const Expanded(
+            child: Text(
+          'Estação',
+          style: TextStyle(
+            fontWeight: FontWeight.w500,
+            fontSize: 16,
+          ),
+        )),
+        Expanded(
+            child: Column(children: [
+          Row(children: const [
+            Icon(
+              Icons.cancel,
+              color: Colors.red,
+            ),
+            Text(' = Sem conexão.')
+          ]),
+          Row(children: const [
+            Icon(
+              Icons.check_circle,
+              color: Colors.green,
+            ),
+            Text(' = Conexão comum.')
+          ]),
+          Row(children: const [
+            Icon(
+              Icons.offline_bolt,
+              color: Colors.amber,
+            ),
+            Text(' = Conexão rápida.')
+          ])
+        ]))
+      ])
+    ]);
   }
 
   Widget _handleSaveButton(BuildContext context) {
