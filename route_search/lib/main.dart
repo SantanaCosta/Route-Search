@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:route_search/view/routes_page.dart';
 import 'package:route_search/view/stations_page.dart';
 import 'view/initial_page.dart';
 import 'view/station_register_page.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Hive.openBox("Rotas");
   runApp(const MyApp());
 }
 
