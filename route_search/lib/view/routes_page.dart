@@ -21,6 +21,8 @@ class _RoutesPageState extends State<RoutesPage> {
   final vertex6 = Vertex(x: -50, y: 200);
   @override
   Widget build(BuildContext context) {
+    final double alturaTela = MediaQuery.of(context).size.height;
+    final double larguraTela = MediaQuery.of(context).size.width;
     final graph = Graph(vertices: [
       vertex1,
       vertex2,
@@ -46,8 +48,7 @@ class _RoutesPageState extends State<RoutesPage> {
       Edge(start: vertex5, end: vertex6),
     ]);
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
+    return Stack(
       children: [
         Expanded(
           child: CustomScrollView(
@@ -68,17 +69,14 @@ class _RoutesPageState extends State<RoutesPage> {
             ],
           ),
         ),
-        Expanded(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              FloatingActionButton(
-                onPressed: () {
-                  _handleBottomSheet(context);
-                },
-                child: const Icon(Icons.route_outlined),
-              ),
-            ],
+        Positioned(
+          bottom: alturaTela * 0.1,
+          right: larguraTela * 0.1,
+          child: FloatingActionButton(
+            onPressed: () {
+              _handleBottomSheet(context);
+            },
+            child: const Icon(Icons.route_outlined),
           ),
         )
       ],
