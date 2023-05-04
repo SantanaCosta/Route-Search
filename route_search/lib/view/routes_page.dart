@@ -229,7 +229,9 @@ class _RoutesPageState extends State<RoutesPage> {
         ElevatedButton(
           style: ElevatedButton.styleFrom(
               textStyle: const TextStyle(fontSize: 20)),
-          onPressed: () {},
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
           child: const Text('Cancelar'),
         ),
         ElevatedButton(
@@ -247,12 +249,4 @@ class _RoutesPageState extends State<RoutesPage> {
       ],
     );
   }
-
-  // Future<String> getInicio() async {
-  //   return await myDataBox.getAt(0)?.text ?? '';
-  // }
-
-  // Future getDestino() async {
-  //   return await myDataBox.getAt(1)?.text ?? '';
-  // }
 }
