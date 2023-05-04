@@ -21,7 +21,7 @@ class _StationsPageState extends State<StationsPage> {
     return Column(children: [
       _handleListView(context),
       Padding(
-          padding: EdgeInsets.only(bottom: 16.0),
+          padding: const EdgeInsets.only(bottom: 16.0),
           child: FloatingActionButton(
             onPressed: () {
               Navigator.pushNamed(context, '/registro');
