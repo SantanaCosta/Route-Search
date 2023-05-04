@@ -18,17 +18,9 @@ class _StationsPageState extends State<StationsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(children: [
+    return Stack(children: [
       _handleListView(context),
-      Padding(
-          padding: const EdgeInsets.only(bottom: 16.0),
-          child: FloatingActionButton(
-            onPressed: () {
-              Navigator.pushNamed(context, '/registro');
-            },
-            child: Icon(Icons.add),
-            backgroundColor: Colors.blue,
-          )),
+      _handleFloatingActionButton(context)
     ]);
   }
 
@@ -62,5 +54,20 @@ class _StationsPageState extends State<StationsPage> {
         },
       ),
     );
+  }
+
+  Widget _handleFloatingActionButton(BuildContext context) {
+    double alturaTela = MediaQuery.of(context).size.height;
+    double larguraTela = MediaQuery.of(context).size.width;
+    return Positioned(
+        bottom: alturaTela * 0.1,
+        right: larguraTela * 0.1,
+        child: FloatingActionButton(
+          child: Icon(Icons.add),
+          backgroundColor: Colors.blue,
+          onPressed: () {
+            Navigator.pushNamed(context, '/registro');
+          },
+        ));
   }
 }

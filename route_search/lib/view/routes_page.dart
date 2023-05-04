@@ -21,8 +21,6 @@ class _RoutesPageState extends State<RoutesPage> {
   final vertex6 = Vertex(x: -50, y: 200);
   @override
   Widget build(BuildContext context) {
-    final double alturaTela = MediaQuery.of(context).size.height;
-    final double larguraTela = MediaQuery.of(context).size.width;
     final graph = Graph(vertices: [
       vertex1,
       vertex2,
@@ -50,36 +48,38 @@ class _RoutesPageState extends State<RoutesPage> {
 
     return Stack(
       children: [
-        Expanded(
-          child: CustomScrollView(
-            slivers: <Widget>[
-              SliverList(
-                delegate: SliverChildListDelegate(
-                  [
-                    GraphWidget(
-                      graph: graph,
-                      vertexColor: Colors.blue,
-                      vertexRadius: 10,
-                      edgeColor: Colors.black,
-                      edgeWidth: 2.0,
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-        Positioned(
-          bottom: alturaTela * 0.1,
-          right: larguraTela * 0.1,
-          child: FloatingActionButton(
-            onPressed: () {
-              _handleBottomSheet(context);
-            },
-            child: const Icon(Icons.route_outlined),
-          ),
-        )
+        _handleGraphWidget(graph),
+        _handleFloatingActionButton(context)
       ],
+    );
+  }
+
+  Widget _handleGraphWidget(Graph graph) {
+    return Expanded(
+      child: InteractiveViewer(
+        child: GraphWidget(
+          graph: graph,
+          vertexColor: Colors.blue,
+          vertexRadius: 10,
+          edgeColor: Colors.black,
+          edgeWidth: 2.0,
+        ),
+      ),
+    );
+  }
+
+  Widget _handleFloatingActionButton(BuildContext context) {
+    double alturaTela = MediaQuery.of(context).size.height;
+    double larguraTela = MediaQuery.of(context).size.width;
+    return Positioned(
+      bottom: alturaTela * 0.1,
+      right: larguraTela * 0.1,
+      child: FloatingActionButton(
+        onPressed: () {
+          _handleBottomSheet(context);
+        },
+        child: const Icon(Icons.route_outlined),
+      ),
     );
   }
 
