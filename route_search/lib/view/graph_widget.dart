@@ -22,9 +22,11 @@ class GraphWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
-      double canvasSize = constraints.minWidth;
+      double canvasSizeWidth = 1080;
+      double canvasSizeHeight = 2400;
       return CustomPaint(
-        size: Size(canvasSize, canvasSize), // Define o tamanho do canvas
+        size: Size(
+            canvasSizeWidth, canvasSizeHeight), // Define o tamanho do canvas
         painter: GraphPainter(
           graph,
           vertexColor,

@@ -14,6 +14,9 @@ class GraphPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
+    canvas.drawRect(Rect.fromLTWH(0, 0, size.width, size.height),
+        Paint()..color = Colors.red);
+
     for (final edge in graph.edges) {
       final start = Offset(edge.start.x, edge.start.y);
       final end = Offset(edge.end.x, edge.end.y);

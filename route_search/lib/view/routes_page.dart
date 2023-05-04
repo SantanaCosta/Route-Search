@@ -50,12 +50,22 @@ class _RoutesPageState extends State<RoutesPage> {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Expanded(
-          child: GraphWidget(
-            graph: graph,
-            vertexColor: Colors.blue,
-            vertexRadius: 10,
-            edgeColor: Colors.black,
-            edgeWidth: 2.0,
+          child: CustomScrollView(
+            slivers: <Widget>[
+              SliverList(
+                delegate: SliverChildListDelegate(
+                  [
+                    GraphWidget(
+                      graph: graph,
+                      vertexColor: Colors.blue,
+                      vertexRadius: 10,
+                      edgeColor: Colors.black,
+                      edgeWidth: 2.0,
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
         ),
         Expanded(
