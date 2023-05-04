@@ -31,28 +31,26 @@ class _StationsPageState extends State<StationsPage> {
   }
 
   Widget _handleListView(BuildContext context) {
-    return Expanded(
-      child: ListView.builder(
-        itemCount: stations.length,
-        itemBuilder: (context, index) {
-          return ListTile(
-              title: Text(stations[index]),
-              trailing: Row(mainAxisSize: MainAxisSize.min, children: [
-                IconButton(
-                  onPressed: () {
-                    Navigator.pushNamed(context, '/registro');
-                  },
-                  icon: const Icon(Icons.edit),
-                ),
-                IconButton(
-                  onPressed: () {
-                    deleteStation(index);
-                  },
-                  icon: const Icon(Icons.delete),
-                ),
-              ]));
-        },
-      ),
+    return ListView.builder(
+      itemCount: stations.length,
+      itemBuilder: (context, index) {
+        return ListTile(
+            title: Text(stations[index]),
+            trailing: Row(mainAxisSize: MainAxisSize.min, children: [
+              IconButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, '/registro');
+                },
+                icon: const Icon(Icons.edit),
+              ),
+              IconButton(
+                onPressed: () {
+                  deleteStation(index);
+                },
+                icon: const Icon(Icons.delete),
+              ),
+            ]));
+      },
     );
   }
 

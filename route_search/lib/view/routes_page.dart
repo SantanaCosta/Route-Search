@@ -28,13 +28,8 @@ class _RoutesPageState extends State<RoutesPage> {
   @override
   void initState() {
     super.initState();
-    _inicioTextEditingController.addListener(() {
-      _inicioTextEditingController.text = myDataBox.getAt(0)?.text ?? '';
-    });
-
-    _destinoTextEditingController.addListener(() {
-      _destinoTextEditingController.text = myDataBox.getAt(0)?.text ?? '';
-    });
+    _inicioTextEditingController.text = myDataBox.getAt(0);
+    _destinoTextEditingController.text = myDataBox.getAt(1);
   }
 
   @override
@@ -73,16 +68,14 @@ class _RoutesPageState extends State<RoutesPage> {
   }
 
   Widget _handleGraphWidget(Graph graph) {
-    return Expanded(
-      child: InteractiveViewer(
-        constrained: false,
-        child: GraphWidget(
-          graph: graph,
-          vertexColor: Colors.blue,
-          vertexRadius: 10,
-          edgeColor: Colors.black,
-          edgeWidth: 2.0,
-        ),
+    return InteractiveViewer(
+      constrained: false,
+      child: GraphWidget(
+        graph: graph,
+        vertexColor: Colors.blue,
+        vertexRadius: 10,
+        edgeColor: Colors.black,
+        edgeWidth: 2.0,
       ),
     );
   }
@@ -116,7 +109,7 @@ class _RoutesPageState extends State<RoutesPage> {
                     children: [
                       _handleTextFields(),
                       _handleSliders(),
-                      _handleButtons()
+                      _handleButtons(context)
                     ],
                   ),
                 );
@@ -131,30 +124,20 @@ class _RoutesPageState extends State<RoutesPage> {
           padding: EdgeInsets.all(2.0),
           child: TextField(
             controller: _inicioTextEditingController,
-            obscureText: true,
             decoration: const InputDecoration(
               border: OutlineInputBorder(),
               labelText: 'Inicio',
             ),
-            onEditingComplete: () {
-              final myData = _inicioTextEditingController.text;
-              myDataBox.put(0, myData);
-            },
           ),
         ),
         Padding(
           padding: EdgeInsets.all(2.0),
           child: TextField(
             controller: _destinoTextEditingController,
-            obscureText: true,
             decoration: const InputDecoration(
               border: OutlineInputBorder(),
               labelText: 'Destino',
             ),
-            onEditingComplete: () {
-              final myData = _destinoTextEditingController.text;
-              myDataBox.put(0, myData);
-            },
           ),
         ),
       ],
@@ -239,7 +222,7 @@ class _RoutesPageState extends State<RoutesPage> {
     );
   }
 
-  Widget _handleButtons() {
+  Widget _handleButtons(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -252,10 +235,24 @@ class _RoutesPageState extends State<RoutesPage> {
         ElevatedButton(
           style: ElevatedButton.styleFrom(
               textStyle: const TextStyle(fontSize: 20)),
-          onPressed: () {},
+          onPressed: () {
+            final inicioData = _inicioTextEditingController.text;
+            myDataBox.put(0, inicioData);
+            final destinoData = _destinoTextEditingController.text;
+            myDataBox.put(1, destinoData);
+            Navigator.of(context).pop();
+          },
           child: const Text('Okay'),
         ),
       ],
     );
   }
+
+  // Future<String> getInicio() async {
+  //   return await myDataBox.getAt(0)?.text ?? '';
+  // }
+
+  // Future getDestino() async {
+  //   return await myDataBox.getAt(1)?.text ?? '';
+  // }
 }
