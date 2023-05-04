@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 
 import '../model/edge.dart';
 import '../model/graph.dart';
@@ -13,12 +14,29 @@ class RoutesPage extends StatefulWidget {
 }
 
 class _RoutesPageState extends State<RoutesPage> {
-  final vertex1 = Vertex(x: 0, y: 100);
+  final vertex1 = Vertex(x: 150, y: 100);
   final vertex2 = Vertex(x: -80, y: 80);
   final vertex3 = Vertex(x: 90, y: 120);
   final vertex4 = Vertex(x: 185, y: 70);
   final vertex5 = Vertex(x: 100, y: 50);
   final vertex6 = Vertex(x: -50, y: 200);
+
+  final _inicioTextEditingController = TextEditingController();
+  final _destinoTextEditingController = TextEditingController();
+  final myDataBox = Hive.box('routes');
+
+  @override
+  void initState() {
+    super.initState();
+    _inicioTextEditingController.addListener(() {
+      _inicioTextEditingController.text = myDataBox.getAt(0)?.text ?? '';
+    });
+
+    _destinoTextEditingController.addListener(() {
+      _destinoTextEditingController.text = myDataBox.getAt(0)?.text ?? '';
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final graph = Graph(vertices: [
@@ -108,25 +126,35 @@ class _RoutesPageState extends State<RoutesPage> {
 
   Widget _handleTextFields() {
     return Column(
-      children: const [
+      children: [
         Padding(
           padding: EdgeInsets.all(2.0),
           child: TextField(
+            controller: _inicioTextEditingController,
             obscureText: true,
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               border: OutlineInputBorder(),
               labelText: 'Inicio',
             ),
+            onEditingComplete: () {
+              final myData = _inicioTextEditingController.text;
+              myDataBox.put(0, myData);
+            },
           ),
         ),
         Padding(
           padding: EdgeInsets.all(2.0),
           child: TextField(
+            controller: _destinoTextEditingController,
             obscureText: true,
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               border: OutlineInputBorder(),
               labelText: 'Destino',
             ),
+            onEditingComplete: () {
+              final myData = _destinoTextEditingController.text;
+              myDataBox.put(0, myData);
+            },
           ),
         ),
       ],
