@@ -57,6 +57,7 @@ class _RoutesPageState extends State<RoutesPage> {
   Widget _handleGraphWidget(Graph graph) {
     return Expanded(
       child: InteractiveViewer(
+        constrained: false,
         child: GraphWidget(
           graph: graph,
           vertexColor: Colors.blue,
