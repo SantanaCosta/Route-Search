@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 
@@ -23,6 +25,10 @@ class _RoutesPageState extends State<RoutesPage> {
 
   final _inicioTextEditingController = TextEditingController();
   final _destinoTextEditingController = TextEditingController();
+  double _distanciaSliderValue = 0;
+  double _rapidezSliderValue = 0;
+  double _paradasSliderValue = 0;
+  final StreamController<double> _streamController = StreamController<double>();
   final myDataBox = Hive.box('routes');
 
   @override
@@ -30,6 +36,9 @@ class _RoutesPageState extends State<RoutesPage> {
     super.initState();
     _inicioTextEditingController.text = myDataBox.getAt(0);
     _destinoTextEditingController.text = myDataBox.getAt(1);
+    _distanciaSliderValue = myDataBox.getAt(2);
+    _paradasSliderValue = myDataBox.getAt(3);
+    _rapidezSliderValue = myDataBox.getAt(4);
   }
 
   @override
@@ -103,15 +112,12 @@ class _RoutesPageState extends State<RoutesPage> {
               enableDrag: false,
               onClosing: () {},
               builder: (BuildContext context) {
-                return Padding(
-                  padding: const EdgeInsets.all(6.0),
-                  child: Column(
-                    children: [
-                      _handleTextFields(),
-                      _handleSliders(),
-                      _handleButtons(context)
-                    ],
-                  ),
+                return Column(
+                  children: [
+                    _handleTextFields(),
+                    _handleSliders(),
+                    _handleButtons(context)
+                  ],
                 );
               });
         });
@@ -148,10 +154,10 @@ class _RoutesPageState extends State<RoutesPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          "Prioridade",
-          style: TextStyle(fontSize: 20),
-        ),
+        // const Text(
+        //   "Prioridade",
+        //   style: TextStyle(fontSize: 10),
+        // ),
         const Text(
           "Menor Distancia",
           style: TextStyle(fontSize: 14),
@@ -159,18 +165,30 @@ class _RoutesPageState extends State<RoutesPage> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Slider(
-              value: 10,
-              max: 100,
-              divisions: 5,
-              label: "sla",
-              onChanged: (double value) {},
-            ),
+            StreamBuilder<Object>(
+                stream: null,
+                builder: (context, snapshot) {
+                  return Slider(
+                    value: _distanciaSliderValue,
+                    max: 100,
+                    divisions: 5,
+                    label: _distanciaSliderValue.round().toString(),
+                    onChanged: (double value) {
+                      setState(() {
+                        _distanciaSliderValue = value;
+                      });
+                      _streamController.add(value);
+                    },
+                  );
+                }),
             Container(
               height: 20,
               width: 50,
               color: Colors.grey[300],
-              child: const Center(child: Text("10")),
+              child: Center(
+                  child: Text(
+                _distanciaSliderValue.round().toString(),
+              )),
             )
           ],
         ),
@@ -182,17 +200,24 @@ class _RoutesPageState extends State<RoutesPage> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Slider(
-              value: 10,
+              value: _paradasSliderValue,
               max: 100,
               divisions: 5,
-              label: "sla",
-              onChanged: (double value) {},
+              label: _paradasSliderValue.round().toString(),
+              onChanged: (double value) {
+                setState(() {
+                  _paradasSliderValue = value;
+                });
+              },
             ),
             Container(
               height: 20,
               width: 50,
               color: Colors.grey[300],
-              child: const Center(child: Text("10")),
+              child: Center(
+                  child: Text(
+                _paradasSliderValue.round().toString(),
+              )),
             )
           ],
         ),
@@ -204,17 +229,22 @@ class _RoutesPageState extends State<RoutesPage> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Slider(
-              value: 10,
+              value: _rapidezSliderValue,
               max: 100,
               divisions: 5,
-              label: "sla",
-              onChanged: (double value) {},
+              label: _rapidezSliderValue.round().toString(),
+              onChanged: (double value) {
+                setState(() {
+                  _rapidezSliderValue = value;
+                });
+              },
             ),
             Container(
               height: 20,
               width: 50,
               color: Colors.grey[300],
-              child: const Center(child: Text("10")),
+              child:
+                  Center(child: Text(_rapidezSliderValue.round().toString())),
             )
           ],
         ),
@@ -242,6 +272,12 @@ class _RoutesPageState extends State<RoutesPage> {
             myDataBox.put(0, inicioData);
             final destinoData = _destinoTextEditingController.text;
             myDataBox.put(1, destinoData);
+            final distanciaData = _distanciaSliderValue;
+            myDataBox.put(2, distanciaData);
+            final rapidezData = _rapidezSliderValue;
+            myDataBox.put(3, rapidezData);
+            final paradasData = _paradasSliderValue;
+            myDataBox.put(4, paradasData);
             Navigator.of(context).pop();
           },
           child: const Text('Okay'),

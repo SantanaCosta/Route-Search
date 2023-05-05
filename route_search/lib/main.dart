@@ -6,6 +6,12 @@ import 'view/station_register_page.dart';
 void main() async {
   await Hive.initFlutter();
   final routesBox = await Hive.openBox('routes');
+  routesBox.put(0, '');
+  routesBox.put(1, '');
+  routesBox.put(2, 0.0);
+  routesBox.put(3, 0.0);
+  routesBox.put(4, 0.0);
+
   runApp(const MyApp());
 }
 
