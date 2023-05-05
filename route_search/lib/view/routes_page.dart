@@ -151,13 +151,18 @@ class _RoutesPageState extends State<RoutesPage> {
   }
 
   Widget _handleSliders() {
+    final _distanciaValueNotifier =
+        ValueNotifier<double>(_distanciaSliderValue);
+    final _paradasValueNotifier = ValueNotifier<double>(_paradasSliderValue);
+    final _rapidezValueNotifier = ValueNotifier<double>(_rapidezSliderValue);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // const Text(
-        //   "Prioridade",
-        //   style: TextStyle(fontSize: 10),
-        // ),
+        const Text(
+          "Prioridade",
+          style: TextStyle(fontSize: 20),
+        ),
         const Text(
           "Menor Distancia",
           style: TextStyle(fontSize: 14),
@@ -165,30 +170,33 @@ class _RoutesPageState extends State<RoutesPage> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            StreamBuilder<Object>(
-                stream: null,
-                builder: (context, snapshot) {
-                  return Slider(
-                    value: _distanciaSliderValue,
-                    max: 100,
-                    divisions: 5,
-                    label: _distanciaSliderValue.round().toString(),
-                    onChanged: (double value) {
-                      setState(() {
-                        _distanciaSliderValue = value;
-                      });
-                      _streamController.add(value);
-                    },
-                  );
-                }),
+            ValueListenableBuilder<double>(
+              valueListenable: _distanciaValueNotifier,
+              builder: (context, value, child) {
+                return Slider(
+                  value: value,
+                  max: 100,
+                  divisions: 5,
+                  label: value.round().toString(),
+                  onChanged: (double newValue) {
+                    _distanciaValueNotifier.value = newValue;
+                    _distanciaSliderValue = newValue;
+                  },
+                );
+              },
+            ),
             Container(
               height: 20,
               width: 50,
               color: Colors.grey[300],
               child: Center(
-                  child: Text(
-                _distanciaSliderValue.round().toString(),
-              )),
+                child: ValueListenableBuilder<double>(
+                  valueListenable: _distanciaValueNotifier,
+                  builder: (context, value, child) {
+                    return Text(value.round().toString());
+                  },
+                ),
+              ),
             )
           ],
         ),
@@ -199,15 +207,19 @@ class _RoutesPageState extends State<RoutesPage> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Slider(
-              value: _paradasSliderValue,
-              max: 100,
-              divisions: 5,
-              label: _paradasSliderValue.round().toString(),
-              onChanged: (double value) {
-                setState(() {
-                  _paradasSliderValue = value;
-                });
+            ValueListenableBuilder<double>(
+              valueListenable: _paradasValueNotifier,
+              builder: (context, value, child) {
+                return Slider(
+                  value: value,
+                  max: 100,
+                  divisions: 5,
+                  label: value.round().toString(),
+                  onChanged: (double newValue) {
+                    _paradasValueNotifier.value = newValue;
+                    _paradasSliderValue = newValue;
+                  },
+                );
               },
             ),
             Container(
@@ -215,9 +227,13 @@ class _RoutesPageState extends State<RoutesPage> {
               width: 50,
               color: Colors.grey[300],
               child: Center(
-                  child: Text(
-                _paradasSliderValue.round().toString(),
-              )),
+                child: ValueListenableBuilder<double>(
+                  valueListenable: _paradasValueNotifier,
+                  builder: (context, value, child) {
+                    return Text(value.round().toString());
+                  },
+                ),
+              ),
             )
           ],
         ),
@@ -228,23 +244,33 @@ class _RoutesPageState extends State<RoutesPage> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Slider(
-              value: _rapidezSliderValue,
-              max: 100,
-              divisions: 5,
-              label: _rapidezSliderValue.round().toString(),
-              onChanged: (double value) {
-                setState(() {
-                  _rapidezSliderValue = value;
-                });
+            ValueListenableBuilder<double>(
+              valueListenable: _rapidezValueNotifier,
+              builder: (context, value, child) {
+                return Slider(
+                  value: value,
+                  max: 100,
+                  divisions: 5,
+                  label: value.round().toString(),
+                  onChanged: (double newValue) {
+                    _rapidezValueNotifier.value = newValue;
+                    _rapidezSliderValue = newValue;
+                  },
+                );
               },
             ),
             Container(
               height: 20,
               width: 50,
               color: Colors.grey[300],
-              child:
-                  Center(child: Text(_rapidezSliderValue.round().toString())),
+              child: Center(
+                child: ValueListenableBuilder<double>(
+                  valueListenable: _rapidezValueNotifier,
+                  builder: (context, value, child) {
+                    return Text(value.round().toString());
+                  },
+                ),
+              ),
             )
           ],
         ),
@@ -280,7 +306,7 @@ class _RoutesPageState extends State<RoutesPage> {
             myDataBox.put(4, paradasData);
             Navigator.of(context).pop();
           },
-          child: const Text('Okay'),
+          child: const Text('OK'),
         ),
       ],
     );
