@@ -7,7 +7,7 @@ class Station {
   factory Station.fromMap(Map<String, dynamic> map) {
     final fields = map['fields'] as Map<String, dynamic>;
     return Station(
-      id: map['name'],
+      id: map['id'],
       name: fields['name']['stringValue'],
     );
   }

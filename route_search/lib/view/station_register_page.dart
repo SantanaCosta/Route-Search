@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../bloc/events.dart';
+import '../bloc/manage_bloc.dart';
+import '../model/station.dart';
 
 class StationRegisterPage extends StatefulWidget {
   const StationRegisterPage({super.key});
@@ -27,14 +32,17 @@ class _StationRegisterPageState extends State<StationRegisterPage> {
         ));
   }
 
+  final nameController = TextEditingController();
+
   Widget _handleTextFields(BuildContext context) {
     return Column(
       children: [
-        const TextField(
-            decoration: InputDecoration(
-          border: OutlineInputBorder(),
-          labelText: 'Nome da estação',
-        )),
+        TextField(
+            controller: nameController,
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+              labelText: 'Nome da estação',
+            )),
         Row(
           children: const [
             SizedBox(
@@ -115,7 +123,15 @@ class _StationRegisterPageState extends State<StationRegisterPage> {
           child: ElevatedButton(
             child: Text('SALVAR'),
             onPressed: () {
-              //
+              Station station = Station.fromMap({
+                "id": nameController.text,
+                "fields": {
+                  "name": {"stringValue": nameController.text}
+                }
+              });
+              BlocProvider.of<ManageBloc>(context).add(
+                SubmitEvent(station: station),
+              );
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.green,
