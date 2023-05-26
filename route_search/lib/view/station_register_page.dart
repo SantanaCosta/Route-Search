@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
+import 'package:route_search/provider/rest_provider.dart';
+import 'package:provider/provider.dart';
 import '../bloc/events.dart';
 import '../bloc/manage_bloc.dart';
 import '../model/connection.dart';
@@ -144,7 +145,6 @@ class _StationRegisterPageState extends State<StationRegisterPage> {
             child: Text('SALVAR'),
             onPressed: () {
               Station station = Station(
-                id: nameController.text,
                 name: nameController.text,
                 coordX: double.parse(xController.text),
                 coordY: double.parse(yController.text),
@@ -162,13 +162,20 @@ class _StationRegisterPageState extends State<StationRegisterPage> {
         ));
   }
 
-  final stations = [
+  /*final stations = [
     'Heloísa Marcela',
     'Jairo Messias',
     'Juca Ramos',
     'Leonardo Amarelo',
     'Zayon Rodrigues'
-  ];
+  ];*/
+
+  Future<List<Station>> _fetchStations(BuildContext context) async {
+    final stationProvider = Provider.of<RestDataProvider>(context);
+    List<Station> stations = await stationProvider.fetchStations();
+    print(stations);
+    return stations;
+  }
 
   int line = -1;
   int row = -1;
@@ -203,31 +210,44 @@ class _StationRegisterPageState extends State<StationRegisterPage> {
 
   Widget _handleConnectionsList(BuildContext context) {
     return Expanded(
-      child: ListView.builder(
-        itemCount: stations.length,
-        itemBuilder: (context, index) {
-          return ListTile(
-              title: Text(stations[index]),
-              trailing: Row(mainAxisSize: MainAxisSize.min, children: [
-                IconButton(
-                    onPressed: () {
-                      changeButtonColour(index, 0);
-                    },
-                    icon: const Icon(Icons.cancel),
-                    color: colours[index][0]),
-                IconButton(
-                    onPressed: () {
-                      changeButtonColour(index, 1);
-                    },
-                    icon: const Icon(Icons.check_circle),
-                    color: colours[index][1]),
-                IconButton(
-                    onPressed: () {
-                      changeButtonColour(index, 2);
-                    },
-                    icon: const Icon(Icons.offline_bolt),
-                    color: colours[index][2]),
-              ]));
+      child: FutureBuilder<List<Station>>(
+        future: _fetchStations(context), // a Future<List<Station>> or null
+        builder: (BuildContext context, AsyncSnapshot<List<Station>> snapshot) {
+          if (snapshot.hasData) {
+            List<Station> stations =
+                snapshot.data!; // aqui você tem acesso à lista de estações
+            return ListView.builder(
+              itemCount: stations.length,
+              itemBuilder: (context, index) {
+                return ListTile(
+                    title: Text(stations[index].name),
+                    trailing: Row(mainAxisSize: MainAxisSize.min, children: [
+                      IconButton(
+                          onPressed: () {
+                            changeButtonColour(index, 0);
+                          },
+                          icon: const Icon(Icons.cancel),
+                          color: colours[index][0]),
+                      IconButton(
+                          onPressed: () {
+                            changeButtonColour(index, 1);
+                          },
+                          icon: const Icon(Icons.check_circle),
+                          color: colours[index][1]),
+                      IconButton(
+                          onPressed: () {
+                            changeButtonColour(index, 2);
+                          },
+                          icon: const Icon(Icons.offline_bolt),
+                          color: colours[index][2]),
+                    ]));
+              },
+            );
+          } else if (snapshot.hasError) {
+            return const Center(
+                child: Text('Ocorreu um erro ao carregar as estações.'));
+          }
+          return const Center(child: CircularProgressIndicator());
         },
       ),
     );

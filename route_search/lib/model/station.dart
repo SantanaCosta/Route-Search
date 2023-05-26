@@ -1,14 +1,12 @@
 import 'connection.dart';
 
 class Station {
-  final String id;
   final String name;
   final double coordX;
   final double coordY;
   final List<Connection> connections;
 
   Station({
-    required this.id,
     required this.name,
     required this.coordX,
     required this.coordY,
@@ -16,32 +14,36 @@ class Station {
   });
 
   factory Station.fromMap(Map<String, dynamic> map) {
-    final fields = map['fields'] as Map<String, dynamic>;
+    final fields = map['fields'];
+    final name = fields['name']['stringValue'];
+    final coordX = fields['coordX']['doubleValue'];
+    final coordY = fields['coordY']['doubleValue'];
+    final connections = fields['connections']['arrayValue']['values'];
+
+    final List<Connection> connectionList = connections.map((connection) {
+      return Connection.fromMap(connection['mapValue']['fields']);
+    }).toList();
+
     return Station(
-      id: map['id'],
-      name: fields['name']['stringValue'],
-      coordX: fields['coordX']['doubleValue'],
-      coordY: fields['coordY']['doubleValue'],
-      connections: (fields['connections']['arrayValue']['values'] as List)
-          .map((e) => Connection.fromMap(e['mapValue']['fields']))
-          .toList(),
+      name: name,
+      coordX: coordX,
+      coordY: coordY,
+      connections: connectionList,
     );
   }
 
   Map<String, dynamic> toMap() {
-    return {
+    final map = {
       'name': {'stringValue': name},
       'coordX': {'doubleValue': coordX},
       'coordY': {'doubleValue': coordY},
       'connections': {
         'arrayValue': {
-          'values': connections
-              .map((e) => {
-                    'mapValue': {'fields': e.toMap()}
-                  })
-              .toList(),
-        },
-      },
+          'values': connections.map((connection) => connection.toMap()).toList()
+        }
+      }
     };
+
+    return {'fields': map};
   }
 }

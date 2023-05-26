@@ -8,16 +8,23 @@ class Connection {
   });
 
   factory Connection.fromMap(Map<String, dynamic> map) {
+    final station = map['station']['stringValue'];
+    final type = map['type']['stringValue'];
+
     return Connection(
-      station: map['station']['stringValue'],
-      type: map['type']['stringValue'],
+      station: station,
+      type: type,
     );
   }
 
   Map<String, dynamic> toMap() {
     return {
-      'station': {'stringValue': station},
-      'type': {'stringValue': type},
+      'mapValue': {
+        'fields': {
+          'station': {'stringValue': station},
+          'type': {'stringValue': type},
+        }
+      }
     };
   }
 }
