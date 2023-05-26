@@ -1,5 +1,9 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
+
+import '../model/station.dart';
 
 class RestDataProvider {
   static RestDataProvider helper = RestDataProvider._createInstance();
@@ -12,21 +16,38 @@ class RestDataProvider {
 
   String sla = "";
 
-  Future<void> createStation() async {
+  Future<List<Station>> fetchStations() async {
     try {
-      await _dio.post('$baseUrl' + ".json", data: {'fields': sla});
+      final response = await _dio.get('$baseUrl' + '.json');
+      if (response.statusCode == 200) {
+        final data = response.data;
+        final stations = (data['documents'] as List)
+            .map((doc) => Station.fromMap(doc['fields']))
+            .toList();
+        return stations;
+      } else {
+        return [];
+      }
+    } catch (error) {
+      return [];
+    }
+  }
+
+  Future<void> createStation(Station station) async {
+    try {
+      await _dio.post('$baseUrl' + ".json", data: {'fields': station.toMap()});
     } catch (error) {}
   }
 
-  Future<void> updateStation(station) async {
+  Future<void> updateStation(Station station) async {
     try {
-      await _dio.put('$baseUrl' + ".json", data: {'fields': sla});
+      await _dio.patch('$baseUrl' + ".json", data: {'fields': station.toMap()});
     } catch (error) {}
   }
 
-  Future<void> deleteStation(station) async {
+  Future<void> deleteStation(Station station) async {
     try {
-      await _dio.delete('$baseUrl' + ".json", data: {'fields': sla});
+      await _dio.delete('$baseUrl' + '.json' + '$station');
     } catch (error) {}
   }
 }
