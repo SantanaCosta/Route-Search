@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../bloc/events.dart';
 import '../bloc/manage_bloc.dart';
+import '../model/connection.dart';
 import '../model/station.dart';
 
 class StationRegisterPage extends StatefulWidget {
@@ -33,6 +34,8 @@ class _StationRegisterPageState extends State<StationRegisterPage> {
   }
 
   final nameController = TextEditingController();
+  final xController = TextEditingController();
+  final yController = TextEditingController();
 
   Widget _handleTextFields(BuildContext context) {
     return Column(
@@ -44,23 +47,25 @@ class _StationRegisterPageState extends State<StationRegisterPage> {
               labelText: 'Nome da estação',
             )),
         Row(
-          children: const [
+          children: [
             SizedBox(
               width: 75,
               child: TextField(
-                  decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'X',
-              )),
+                  controller: xController,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'X',
+                  )),
             ),
             SizedBox(height: 70, width: 10),
             SizedBox(
               width: 75,
               child: TextField(
-                  decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Y',
-              )),
+                  controller: yController,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'Y',
+                  )),
             ),
           ],
         ),
@@ -114,6 +119,21 @@ class _StationRegisterPageState extends State<StationRegisterPage> {
     ]);
   }
 
+  List<Connection> connections = [
+    Connection(
+      station: 'A',
+      type: 'slow',
+    ),
+    Connection(
+      station: 'B',
+      type: 'slow',
+    ),
+    Connection(
+      station: 'C',
+      type: 'fast',
+    ),
+  ];
+
   Widget _handleSaveButton(BuildContext context) {
     return Container(
         color: Colors.green,
@@ -123,12 +143,13 @@ class _StationRegisterPageState extends State<StationRegisterPage> {
           child: ElevatedButton(
             child: Text('SALVAR'),
             onPressed: () {
-              Station station = Station.fromMap({
-                "id": nameController.text,
-                "fields": {
-                  "name": {"stringValue": nameController.text}
-                }
-              });
+              Station station = Station(
+                id: nameController.text,
+                name: nameController.text,
+                coordX: double.parse(xController.text),
+                coordY: double.parse(yController.text),
+                connections: connections,
+              );
               BlocProvider.of<ManageBloc>(context).add(
                 SubmitEvent(station: station),
               );
