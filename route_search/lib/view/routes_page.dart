@@ -6,6 +6,7 @@ import 'package:hive/hive.dart';
 import '../model/edge.dart';
 import '../model/graph.dart';
 import '../model/vertex.dart';
+import '../provider/rest_provider.dart';
 import 'graph_widget.dart';
 
 class RoutesPage extends StatefulWidget {
@@ -29,17 +30,6 @@ class _RoutesPageState extends State<RoutesPage> {
   double _rapidezSliderValue = 0;
   double _paradasSliderValue = 0;
   final StreamController<double> _streamController = StreamController<double>();
-  final myDataBox = Hive.box('routes');
-
-  @override
-  void initState() {
-    super.initState();
-    _inicioTextEditingController.text = myDataBox.getAt(0);
-    _destinoTextEditingController.text = myDataBox.getAt(1);
-    _distanciaSliderValue = myDataBox.getAt(2);
-    _paradasSliderValue = myDataBox.getAt(3);
-    _rapidezSliderValue = myDataBox.getAt(4);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -159,10 +149,10 @@ class _RoutesPageState extends State<RoutesPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          "Prioridade",
-          style: TextStyle(fontSize: 20),
-        ),
+        // const Text(
+        //   "Prioridade",
+        //   style: TextStyle(fontSize: 20),
+        // ),
         const Text(
           "Menor Distancia",
           style: TextStyle(fontSize: 14),
@@ -294,16 +284,6 @@ class _RoutesPageState extends State<RoutesPage> {
           style: ElevatedButton.styleFrom(
               textStyle: const TextStyle(fontSize: 20)),
           onPressed: () {
-            final inicioData = _inicioTextEditingController.text;
-            myDataBox.put(0, inicioData);
-            final destinoData = _destinoTextEditingController.text;
-            myDataBox.put(1, destinoData);
-            final distanciaData = _distanciaSliderValue;
-            myDataBox.put(2, distanciaData);
-            final rapidezData = _rapidezSliderValue;
-            myDataBox.put(3, rapidezData);
-            final paradasData = _paradasSliderValue;
-            myDataBox.put(4, paradasData);
             Navigator.of(context).pop();
           },
           child: const Text('OK'),

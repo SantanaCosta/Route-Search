@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "350419762712",
+    "firebase_url": "https://route-search-3976b-default-rtdb.firebaseio.com",
+    "project_id": "route-search-3976b",
+    "storage_bucket": "route-search-3976b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:350419762712:android:961e9d3cef87675ab28d6d",
+        "android_client_info": {
+          "package_name": "com.example.route_search"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBRDOt-SIyu8PjrFVukJEyrmhk6m_-InbQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
