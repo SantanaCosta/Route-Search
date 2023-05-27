@@ -162,33 +162,45 @@ class _StationRegisterPageState extends State<StationRegisterPage> {
   }
 
   Widget _handleSaveButton(BuildContext context) {
-    return Container(
-        color: Colors.green,
-        margin: EdgeInsets.all(10),
-        child: SizedBox(
-          width: MediaQuery.of(context).size.width * 0.8,
-          child: ElevatedButton(
-            child: Text('SALVAR'),
-            onPressed: () {
-              print("Abaixo?");
-              Station station = Station(
-                name: nameValue,
-                coordX: double.parse(xValue),
-                coordY: double.parse(yValue),
-                connections: connections,
-              );
-              print("Cima?");
-              BlocProvider.of<ManageBloc>(context).add(
-                SubmitEvent(station: station),
-              );
-              Navigator.pop(context);
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.green,
-              minimumSize: Size(0, 50),
+    return BlocBuilder<ManageBloc, ManageState>(builder: (context, state) {
+      return Container(
+          color: Colors.green,
+          margin: EdgeInsets.all(10),
+          child: SizedBox(
+            width: MediaQuery.of(context).size.width * 0.8,
+            child: ElevatedButton(
+              child: Text('SALVAR'),
+              onPressed: () {
+                if (state is UpdateState) {
+                  if (nameValue == "") nameValue = state.previousStation.name;
+                  if (xValue == "")
+                    xValue = state.previousStation.coordX.toString();
+                  if (yValue == "")
+                    yValue = state.previousStation.coordY.toString();
+                } else {
+                  if (nameValue == "") nameValue = "Unknown";
+                  if (xValue == "") xValue = "0";
+                  if (yValue == "") yValue = "0";
+                }
+
+                Station station = Station(
+                  name: nameValue,
+                  coordX: double.parse(xValue),
+                  coordY: double.parse(yValue),
+                  connections: connections,
+                );
+                BlocProvider.of<ManageBloc>(context).add(
+                  SubmitEvent(station: station),
+                );
+                Navigator.pop(context);
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.green,
+                minimumSize: Size(0, 50),
+              ),
             ),
-          ),
-        ));
+          ));
+    });
   }
 
   int line = -1;

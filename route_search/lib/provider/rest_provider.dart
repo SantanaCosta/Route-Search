@@ -40,10 +40,13 @@ class RestDataProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> updateStation(Station station) async {
+  Future<void> updateStation(String stationId, Station station) async {
     try {
-      await _dio.patch('$baseUrl' + ".json", data: {'fields': station.toMap()});
-    } catch (error) {}
+      await _dio.put('$baseUrl/$stationId' + ".json",
+          data: {'fields': station.toMap()});
+    } catch (error) {
+      print(error);
+    }
   }
 
   Future<void> deleteStation(String stationId) async {

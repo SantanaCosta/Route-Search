@@ -37,6 +37,7 @@ class ManageBloc extends Bloc<ManageEvent, ManageState> {
       RestDataProvider.helper.createStation(event.station);
     } else if (state is UpdateState) {
       RestDataProvider.helper.updateStation(
+        (state as UpdateState).stationId,
         event.station,
       );
       emit(InsertState());
