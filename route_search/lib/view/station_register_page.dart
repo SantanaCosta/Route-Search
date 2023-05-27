@@ -122,20 +122,27 @@ class _StationRegisterPageState extends State<StationRegisterPage> {
     ]);
   }
 
-  List<Connection> connections = [
-    Connection(
-      station: 'A',
-      type: 'slow',
-    ),
-    Connection(
-      station: 'B',
-      type: 'slow',
-    ),
-    Connection(
-      station: 'C',
-      type: 'fast',
-    ),
-  ];
+  List<Connection> connections = [];
+
+  List<Connection> _getConnections(int qty) {
+    // Temporário
+    List<Connection> connections = [
+      Connection(
+        station: 'A',
+        type: 'slow',
+      ),
+      Connection(
+        station: 'B',
+        type: 'slow',
+      ),
+      Connection(
+        station: 'C',
+        type: 'fast',
+      )
+    ];
+
+    return connections;
+  }
 
   Widget _handleSaveButton(BuildContext context) {
     return Container(
@@ -167,8 +174,8 @@ class _StationRegisterPageState extends State<StationRegisterPage> {
   int line = -1;
   int row = -1;
 
-  List<List<Color>> colours =
-      List.generate(5, (index) => [Colors.red, Colors.grey, Colors.grey]);
+  bool init = true;
+  List<List<Color>> colours = [];
 
   void changeButtonColour(int index, int icon) {
     setState(() {
@@ -198,6 +205,20 @@ class _StationRegisterPageState extends State<StationRegisterPage> {
   Widget _handleConnectionsList(BuildContext context) {
     return BlocBuilder<MonitorBloc, MonitorState>(builder: (context, state) {
       StationCollection stationCollection = state.stationCollection;
+
+      if (init) {
+        int total = stationCollection.length();
+        if (total == 0) {
+          total = 99;
+        } else {
+          colours = List.generate(
+              total, (i) => [Colors.red, Colors.grey, Colors.grey]);
+        }
+      }
+      init = false;
+
+      connections = _getConnections(stationCollection.length());
+
       return Expanded(
         child: ListView.builder(
           itemCount: stationCollection.length(),
