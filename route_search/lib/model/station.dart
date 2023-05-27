@@ -1,10 +1,10 @@
 import 'connection.dart';
 
 class Station {
-  final String name;
-  final double coordX;
-  final double coordY;
-  final List<Connection> connections;
+  String name = "";
+  double coordX = 0;
+  double coordY = 0;
+  List<Connection> connections = [];
 
   Station({
     required this.name,
@@ -13,7 +13,7 @@ class Station {
     required this.connections,
   });
 
-  factory Station.fromMap(Map<String, dynamic> map) {
+  /*factory Station.fromMap(Map<String, dynamic> map) {
     final fields = map['fields'];
     final name = fields['name']['stringValue'];
     final coordX = fields['coordX']['doubleValue'];
@@ -42,8 +42,25 @@ class Station {
           'values': connections.map((connection) => connection.toMap()).toList()
         }
       }
-    };
+    };*/
 
-    return {'fields': map};
+  Station.fromMap(map) {
+    name = map["name"];
+    coordX = map["coordX"];
+    coordY = map["coordY"];
+    connections = map["connections"];
+  }
+
+  toMap() {
+    return {
+      'name': {'stringValue': name},
+      'coordX': {'doubleValue': coordX},
+      'coordY': {'doubleValue': coordY},
+      'connections': {
+        'arrayValue': {
+          'values': connections.map((connection) => connection.toMap()).toList()
+        }
+      }
+    };
   }
 }

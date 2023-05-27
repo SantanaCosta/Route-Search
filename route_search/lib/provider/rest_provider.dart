@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 
+import '../model/connection.dart';
 import '../model/station.dart';
 
 class RestDataProvider extends ChangeNotifier {
@@ -17,46 +18,65 @@ class RestDataProvider extends ChangeNotifier {
   Future<List<Station>> fetchStations() async {
     try {
       final response = await _dio.get('$baseUrl' + '.json');
-      //print(response.data);
       if (response.statusCode == 200) {
-        // Verifica se o response.data não é nulo
-        if (response.data != null) {
-          final data = response.data;
-          // Converte o data para uma lista de Map<String, dynamic>
-          final stationsData = (data as Map).values.toList();
-          // Converte cada Map para uma instância de Station usando o método fromMap
-          final stations =
-              stationsData.map((station) => Station.fromMap(station)).toList();
-          return stations;
-        } else {
-          // Retorna uma lista vazia se o response.data for nulo
-          return [];
-        }
+        final data = response.data;
+        final stations = (data['documents'] as List)
+            .map((doc) => Station.fromMap(doc['fields']))
+            .toList();
+        return stations;
       } else {
         return [];
       }
     } catch (error) {
-      print(error);
       return [];
     }
   }
 
   Future<void> createStation(Station station) async {
     try {
-      await _dio.post('$baseUrl' + ".json", data: station.toMap());
+      await _dio.post('$baseUrl' + ".json", data: {'fields': station.toMap()});
     } catch (error) {}
   }
 
   Future<void> updateStation(Station station) async {
     try {
-      await _dio.patch('$baseUrl' + "/${station.name}.json",
-          data: station.toMap());
+      await _dio.patch('$baseUrl' + ".json", data: {'fields': station.toMap()});
     } catch (error) {}
   }
 
   Future<void> deleteStation(Station station) async {
     try {
-      await _dio.delete('$baseUrl' + "/${station.name}.json");
+      await _dio.delete('$baseUrl' + '.json' + '$station');
     } catch (error) {}
+  }
+
+  Future<List<Station>> getStationList() async {
+    Response response = await _dio.get('$baseUrl' + '.json');
+
+    //print(response.data);
+
+    List<Station> stList = [];
+    try {
+      response.data.forEach((key, value) {
+        print(value["fields"]["connections"]["arrayValue"]["values"]);
+        var connections =
+            value["fields"]["connections"]["arrayValue"]["values"];
+        List<Connection> connList = [];
+        /*connList = connections.map((conn) {
+          return Connection.fromMap(conn);
+        }).toList();*/
+
+        stList.add(Station.fromMap({
+          "name": value["fields"]["name"]["stringValue"],
+          "coordX": value["fields"]["coordX"]["doubleValue"],
+          "coordY": value["fields"]["coordY"]["doubleValue"],
+          "connections": connList
+        }));
+      });
+      return stList;
+    } catch (error) {
+      print(error);
+      return stList;
+    }
   }
 }

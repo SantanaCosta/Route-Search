@@ -208,10 +208,17 @@ class _StationRegisterPageState extends State<StationRegisterPage> {
     });
   }
 
+  Future<List<Station>> _getStations(BuildContext context) async {
+    final stationProvider = Provider.of<RestDataProvider>(context);
+    List<Station> stations = await stationProvider.getStationList();
+    print(stations);
+    return stations;
+  }
+
   Widget _handleConnectionsList(BuildContext context) {
     return Expanded(
       child: FutureBuilder<List<Station>>(
-        future: _fetchStations(context), // a Future<List<Station>> or null
+        future: _getStations(context), // a Future<List<Station>> or null
         builder: (BuildContext context, AsyncSnapshot<List<Station>> snapshot) {
           if (snapshot.hasData) {
             List<Station> stations =
