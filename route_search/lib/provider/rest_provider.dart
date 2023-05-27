@@ -35,7 +35,9 @@ class RestDataProvider extends ChangeNotifier {
   Future<void> createStation(Station station) async {
     try {
       await _dio.post('$baseUrl' + ".json", data: {'fields': station.toMap()});
-    } catch (error) {}
+    } catch (error) {
+      print(error);
+    }
   }
 
   Future<void> updateStation(Station station) async {

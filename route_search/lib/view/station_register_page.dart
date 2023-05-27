@@ -79,7 +79,7 @@ class _StationRegisterPageState extends State<StationRegisterPage> {
                         ? state.previousStation.coordY.toString()
                         : "",
                     onChanged: (value) {
-                      xValue = value;
+                      yValue = value;
                     },
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
@@ -170,15 +170,18 @@ class _StationRegisterPageState extends State<StationRegisterPage> {
           child: ElevatedButton(
             child: Text('SALVAR'),
             onPressed: () {
+              print("Abaixo?");
               Station station = Station(
                 name: nameValue,
                 coordX: double.parse(xValue),
                 coordY: double.parse(yValue),
                 connections: connections,
               );
+              print("Cima?");
               BlocProvider.of<ManageBloc>(context).add(
                 SubmitEvent(station: station),
               );
+              Navigator.pop(context);
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.green,
@@ -219,18 +222,22 @@ class _StationRegisterPageState extends State<StationRegisterPage> {
     });
   }
 
+  int count = 0;
   Widget _handleConnectionsList(BuildContext context) {
     return BlocBuilder<MonitorBloc, MonitorState>(builder: (context, state) {
       StationCollection stationCollection = state.stationCollection;
-
-      colours = List.generate(stationCollection.length(),
-          (i) => [Colors.red, Colors.grey, Colors.grey]);
+      if (init) {
+        colours = List.generate(stationCollection.length(),
+            (i) => [Colors.red, Colors.grey, Colors.grey]);
+        count = stationCollection.length();
+      }
+      init = false;
 
       connections = _getConnections(stationCollection.length());
 
       return Expanded(
         child: ListView.builder(
-          itemCount: stationCollection.length(),
+          itemCount: count,
           itemBuilder: (context, index) {
             return ListTile(
                 title: Text(stationCollection.getStationAtIndex(index).name),

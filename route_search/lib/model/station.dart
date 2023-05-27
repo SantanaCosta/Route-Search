@@ -33,8 +33,8 @@ class Station {
     );
   }
 
-  Map<String, dynamic> toMap() {
-    final map = {
+  toMap() {
+    return {
       'name': {'stringValue': name},
       'coordX': {'doubleValue': coordX},
       'coordY': {'doubleValue': coordY},
@@ -44,7 +44,5 @@ class Station {
         }
       }
     };
-
-    return {'fields': map};
   }
 }
