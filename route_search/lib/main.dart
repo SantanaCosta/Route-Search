@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:route_search/provider/rest_provider.dart';
 import 'package:route_search/view/home_page.dart';
 import 'bloc/manage_bloc.dart';
+import 'bloc/monitor.dart';
+import 'bloc/states.dart';
 import 'view/station_register_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
@@ -21,22 +23,24 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
+    return MultiBlocProvider(
         providers: [
-          ChangeNotifierProvider<RestDataProvider>(
-              create: (_) => RestDataProvider.helper),
-          BlocProvider(create: (context) => ManageBloc())
+          BlocProvider(create: (_) => ManageBloc()),
+          BlocProvider(create: (_) => MonitorBloc()),
         ],
-        child: MaterialApp(
-          title: 'Flutter Demo',
-          theme: ThemeData(
-            primarySwatch: Colors.blue,
+        child: BlocListener<ManageBloc, ManageState>(
+          listener: (context, state) {},
+          child: MaterialApp(
+            title: 'Flutter Demo',
+            theme: ThemeData(
+              primarySwatch: Colors.blue,
+            ),
+            home: const MyHomePage(title: 'Route Search'),
+            initialRoute: '/',
+            routes: {
+              '/registro': (context) => const StationRegisterPage(),
+            },
           ),
-          home: const MyHomePage(title: 'Route Search'),
-          initialRoute: '/',
-          routes: {
-            '/registro': (context) => const StationRegisterPage(),
-          },
         ));
   }
 }
