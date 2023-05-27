@@ -4,8 +4,10 @@ import 'package:route_search/provider/rest_provider.dart';
 import 'package:provider/provider.dart';
 import '../bloc/events.dart';
 import '../bloc/manage_bloc.dart';
+import '../bloc/monitor.dart';
 import '../model/connection.dart';
 import '../model/station.dart';
+import '../model/stationcollection.dart';
 
 class StationRegisterPage extends StatefulWidget {
   const StationRegisterPage({super.key});
@@ -193,54 +195,38 @@ class _StationRegisterPageState extends State<StationRegisterPage> {
     });
   }
 
-  Future<List<Station>> _getStations(BuildContext context) async {
-    final stationProvider = Provider.of<RestDataProvider>(context);
-    List<Station> stations = await stationProvider.getStationList();
-    print(stations);
-    return stations;
-  }
-
   Widget _handleConnectionsList(BuildContext context) {
-    return Expanded(
-      child: FutureBuilder<List<Station>>(
-        future: _getStations(context),
-        builder: (BuildContext context, AsyncSnapshot<List<Station>> snapshot) {
-          if (snapshot.hasData) {
-            List<Station> stations = snapshot.data!;
-            return ListView.builder(
-              itemCount: stations.length,
-              itemBuilder: (context, index) {
-                return ListTile(
-                    title: Text(stations[index].name),
-                    trailing: Row(mainAxisSize: MainAxisSize.min, children: [
-                      IconButton(
-                          onPressed: () {
-                            changeButtonColour(index, 0);
-                          },
-                          icon: const Icon(Icons.cancel),
-                          color: colours[index][0]),
-                      IconButton(
-                          onPressed: () {
-                            changeButtonColour(index, 1);
-                          },
-                          icon: const Icon(Icons.check_circle),
-                          color: colours[index][1]),
-                      IconButton(
-                          onPressed: () {
-                            changeButtonColour(index, 2);
-                          },
-                          icon: const Icon(Icons.offline_bolt),
-                          color: colours[index][2]),
-                    ]));
-              },
-            );
-          } else if (snapshot.hasError) {
-            return const Center(
-                child: Text('Ocorreu um erro ao carregar as estações.'));
-          }
-          return const Center(child: CircularProgressIndicator());
-        },
-      ),
-    );
+    return BlocBuilder<MonitorBloc, MonitorState>(builder: (context, state) {
+      StationCollection stationCollection = state.stationCollection;
+      return Expanded(
+        child: ListView.builder(
+          itemCount: stationCollection.length(),
+          itemBuilder: (context, index) {
+            return ListTile(
+                title: Text(stationCollection.getStationAtIndex(index).name),
+                trailing: Row(mainAxisSize: MainAxisSize.min, children: [
+                  IconButton(
+                      onPressed: () {
+                        changeButtonColour(index, 0);
+                      },
+                      icon: const Icon(Icons.cancel),
+                      color: colours[index][0]),
+                  IconButton(
+                      onPressed: () {
+                        changeButtonColour(index, 1);
+                      },
+                      icon: const Icon(Icons.check_circle),
+                      color: colours[index][1]),
+                  IconButton(
+                      onPressed: () {
+                        changeButtonColour(index, 2);
+                      },
+                      icon: const Icon(Icons.offline_bolt),
+                      color: colours[index][2]),
+                ]));
+          },
+        ),
+      );
+    });
   }
 }
