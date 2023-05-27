@@ -23,3 +23,5 @@ class UpdateRequest extends ManageEvent {
 }
 
 class UpdateCancel extends ManageEvent {}
+
+class InsertEvent extends ManageEvent {}

@@ -10,6 +10,11 @@ class ManageBloc extends Bloc<ManageEvent, ManageState> {
     on<UpdateRequest>(updateRequest);
     on<UpdateCancel>(updateCancel);
     on<DeleteEvent>(deleteEvent);
+    on<InsertEvent>(insertEvent);
+  }
+
+  insertEvent(InsertEvent event, Emitter emit) {
+    emit(InsertState());
   }
 
   updateRequest(UpdateRequest event, Emitter emit) {

@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../bloc/events.dart';
 import '../bloc/manage_bloc.dart';
 import '../bloc/monitor.dart';
+import '../bloc/states.dart';
 import '../model/connection.dart';
 import '../model/station.dart';
 import '../model/stationcollection.dart';
@@ -36,44 +37,60 @@ class _StationRegisterPageState extends State<StationRegisterPage> {
         ));
   }
 
-  final nameController = TextEditingController();
-  final xController = TextEditingController();
-  final yController = TextEditingController();
+  String nameValue = "";
+  String xValue = "";
+  String yValue = "";
 
   Widget _handleTextFields(BuildContext context) {
-    return Column(
-      children: [
-        TextField(
-            controller: nameController,
-            decoration: const InputDecoration(
-              border: OutlineInputBorder(),
-              labelText: 'Nome da estação',
-            )),
-        Row(
-          children: [
-            SizedBox(
-              width: 75,
-              child: TextField(
-                  controller: xController,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'X',
-                  )),
-            ),
-            SizedBox(height: 70, width: 10),
-            SizedBox(
-              width: 75,
-              child: TextField(
-                  controller: yController,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Y',
-                  )),
-            ),
-          ],
-        ),
-      ],
-    );
+    return BlocBuilder<ManageBloc, ManageState>(builder: (context, state) {
+      return Column(
+        children: [
+          TextFormField(
+              initialValue:
+                  state is UpdateState ? state.previousStation.name : "",
+              onChanged: (value) {
+                nameValue = value;
+              },
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: 'Nome da estação',
+              )),
+          Row(
+            children: [
+              SizedBox(
+                width: 75,
+                child: TextFormField(
+                    initialValue: state is UpdateState
+                        ? state.previousStation.coordX.toString()
+                        : "",
+                    onChanged: (value) {
+                      xValue = value;
+                    },
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'X',
+                    )),
+              ),
+              SizedBox(height: 70, width: 10),
+              SizedBox(
+                width: 75,
+                child: TextFormField(
+                    initialValue: state is UpdateState
+                        ? state.previousStation.coordY.toString()
+                        : "",
+                    onChanged: (value) {
+                      xValue = value;
+                    },
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Y',
+                    )),
+              ),
+            ],
+          ),
+        ],
+      );
+    });
   }
 
   Widget _handleDescription(BuildContext context) {
@@ -154,9 +171,9 @@ class _StationRegisterPageState extends State<StationRegisterPage> {
             child: Text('SALVAR'),
             onPressed: () {
               Station station = Station(
-                name: nameController.text,
-                coordX: double.parse(xController.text),
-                coordY: double.parse(yController.text),
+                name: nameValue,
+                coordX: double.parse(xValue),
+                coordY: double.parse(yValue),
                 connections: connections,
               );
               BlocProvider.of<ManageBloc>(context).add(
@@ -206,16 +223,8 @@ class _StationRegisterPageState extends State<StationRegisterPage> {
     return BlocBuilder<MonitorBloc, MonitorState>(builder: (context, state) {
       StationCollection stationCollection = state.stationCollection;
 
-      if (init) {
-        int total = stationCollection.length();
-        if (total == 0) {
-          total = 99;
-        } else {
-          colours = List.generate(
-              total, (i) => [Colors.red, Colors.grey, Colors.grey]);
-        }
-      }
-      init = false;
+      colours = List.generate(stationCollection.length(),
+          (i) => [Colors.red, Colors.grey, Colors.grey]);
 
       connections = _getConnections(stationCollection.length());
 

@@ -69,6 +69,7 @@ class _StationsPageState extends State<StationsPage> {
           child: Icon(Icons.add),
           backgroundColor: Colors.blue,
           onPressed: () {
+            BlocProvider.of<ManageBloc>(context).add(InsertEvent());
             Navigator.pushNamed(context, '/registro');
           },
         ));
