@@ -1,18 +1,18 @@
 class Connection {
-  String station = "";
-  String type = "";
+  String stationId = "";
+  int type = 0;
 
   Connection({
-    required this.station,
+    required this.stationId,
     required this.type,
   });
 
   Connection.fromMap(map) {
-    station = map['station']['stringValue'];
-    type = map['type']['stringValue'];
+    stationId = map['station']['stringValue'];
+    type = map['type']['intValue'];
   }
 
   toMap() {
-    return {"station": station, "type": type};
+    return {"station": stationId, "type": type};
   }
 }

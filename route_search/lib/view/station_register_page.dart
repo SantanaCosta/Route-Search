@@ -40,9 +40,13 @@ class _StationRegisterPageState extends State<StationRegisterPage> {
   String nameValue = "";
   String xValue = "";
   String yValue = "";
+  String previousId = "";
 
   Widget _handleTextFields(BuildContext context) {
     return BlocBuilder<ManageBloc, ManageState>(builder: (context, state) {
+      if (state is UpdateState) {
+        previousId = state.stationId;
+      }
       return Column(
         children: [
           TextFormField(
@@ -141,22 +145,18 @@ class _StationRegisterPageState extends State<StationRegisterPage> {
 
   List<Connection> connections = [];
 
-  List<Connection> _getConnections(int qty) {
-    // Temporário
-    List<Connection> connections = [
-      Connection(
-        station: 'A',
-        type: 'slow',
-      ),
-      Connection(
-        station: 'B',
-        type: 'slow',
-      ),
-      Connection(
-        station: 'C',
-        type: 'fast',
-      )
-    ];
+  List<Connection> _setConnections(StationCollection stationCollection) {
+    List<Connection> connections = [];
+
+    for (int i = 0; i < stationCollection.length(); i++) {
+      if (colours[i][0] == Colors.grey) {
+        int type = 0;
+        if (colours[i][1] == Colors.grey) type = 1;
+
+        connections.add(Connection(
+            stationId: stationCollection.getIdAtIndex(1), type: type));
+      }
+    }
 
     return connections;
   }
@@ -169,7 +169,6 @@ class _StationRegisterPageState extends State<StationRegisterPage> {
           child: SizedBox(
             width: MediaQuery.of(context).size.width * 0.8,
             child: ElevatedButton(
-              child: Text('SALVAR'),
               onPressed: () {
                 if (state is UpdateState) {
                   if (nameValue == "") nameValue = state.previousStation.name;
@@ -198,6 +197,7 @@ class _StationRegisterPageState extends State<StationRegisterPage> {
                 backgroundColor: Colors.green,
                 minimumSize: Size(0, 50),
               ),
+              child: const Text('SALVAR'),
             ),
           ));
     });
@@ -237,7 +237,20 @@ class _StationRegisterPageState extends State<StationRegisterPage> {
   int count = 0;
   Widget _handleConnectionsList(BuildContext context) {
     return BlocBuilder<MonitorBloc, MonitorState>(builder: (context, state) {
-      StationCollection stationCollection = state.stationCollection;
+      StationCollection ofStationCollection = state.stationCollection;
+      StationCollection stationCollection = StationCollection();
+      if (previousId != "") {
+        for (int i = 0; i < ofStationCollection.length(); i++) {
+          String id = ofStationCollection.getIdAtIndex(i);
+          if (id != previousId) {
+            stationCollection.insertStationOfId(
+                id, ofStationCollection.getStationAtIndex(i));
+          }
+        }
+      } else {
+        stationCollection = ofStationCollection;
+      }
+
       if (init) {
         colours = List.generate(stationCollection.length(),
             (i) => [Colors.red, Colors.grey, Colors.grey]);
@@ -245,7 +258,7 @@ class _StationRegisterPageState extends State<StationRegisterPage> {
       }
       init = false;
 
-      connections = _getConnections(stationCollection.length());
+      connections = _setConnections(stationCollection);
 
       return Expanded(
         child: ListView.builder(
