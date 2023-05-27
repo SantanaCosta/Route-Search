@@ -14,14 +14,6 @@ class StationsPage extends StatefulWidget {
 }
 
 class _StationsPageState extends State<StationsPage> {
-  // final stations = [
-  //   'Heloísa Marcela',
-  //   'Jairo Messias',
-  //   'Juca Ramos',
-  //   'Leonardo Amarelo',
-  //   'Zayon Rodrigues'
-  // ];
-
   @override
   Widget build(BuildContext context) {
     return Stack(children: [
@@ -42,6 +34,11 @@ class _StationsPageState extends State<StationsPage> {
                 IconButton(
                   onPressed: () {
                     print(stationCollection.length());
+                    BlocProvider.of<ManageBloc>(context).add(UpdateRequest(
+                      stationId: stationCollection.getIdAtIndex(index),
+                      previousStation:
+                          stationCollection.getStationAtIndex(index),
+                    ));
                     Navigator.pushNamed(context, '/registro');
                   },
                   icon: const Icon(Icons.edit),
