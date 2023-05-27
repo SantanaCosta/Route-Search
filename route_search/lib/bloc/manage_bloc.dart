@@ -24,7 +24,7 @@ class ManageBloc extends Bloc<ManageEvent, ManageState> {
   }
 
   deleteEvent(DeleteEvent event, Emitter emit) {
-    RestDataProvider.helper.deleteStation(event.station);
+    RestDataProvider.helper.deleteStation(event.stationId);
   }
 
   submitEvent(SubmitEvent event, Emitter emit) {

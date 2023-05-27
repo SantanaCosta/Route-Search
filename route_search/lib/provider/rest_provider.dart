@@ -44,9 +44,9 @@ class RestDataProvider extends ChangeNotifier {
     } catch (error) {}
   }
 
-  Future<void> deleteStation(Station station) async {
+  Future<void> deleteStation(String stationId) async {
     try {
-      await _dio.delete('$baseUrl' + '.json' + '$station');
+      await _dio.delete('$baseUrl' + '$stationId' + '.json');
     } catch (error) {}
   }
 

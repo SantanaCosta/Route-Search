@@ -3,6 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:route_search/bloc/monitor.dart';
 import 'package:route_search/model/stationcollection.dart';
 
+import '../bloc/events.dart';
+import '../bloc/manage_bloc.dart';
+
 class StationsPage extends StatefulWidget {
   const StationsPage({super.key});
 
@@ -27,8 +30,6 @@ class _StationsPageState extends State<StationsPage> {
     ]);
   }
 
-  deleteStation(int id) {}
-
   Widget _handleListView(BuildContext context) {
     return BlocBuilder<MonitorBloc, MonitorState>(builder: (context, state) {
       StationCollection stationCollection = state.stationCollection;
@@ -47,7 +48,11 @@ class _StationsPageState extends State<StationsPage> {
                 ),
                 IconButton(
                   onPressed: () {
-                    deleteStation(index);
+                    BlocProvider.of<ManageBloc>(context).add(DeleteEvent(
+                      stationId: stationCollection.getIdAtIndex(index),
+                    ));
+                    stationCollection.deleteStationOfId(
+                        stationCollection.getIdAtIndex(index));
                   },
                   icon: const Icon(Icons.delete),
                 ),

@@ -8,8 +8,8 @@ class SubmitEvent extends ManageEvent {
 }
 
 class DeleteEvent extends ManageEvent {
-  Station station;
-  DeleteEvent({required this.station});
+  String stationId;
+  DeleteEvent({required this.stationId});
 }
 
 class UpdateRequest extends ManageEvent {
