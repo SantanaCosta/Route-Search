@@ -58,7 +58,7 @@ class RestDataProvider extends ChangeNotifier {
     List<Station> stList = [];
     try {
       response.data.forEach((key, value) {
-        print(value["fields"]["connections"]["arrayValue"]["values"]);
+        //print(value["fields"]["connections"]["arrayValue"]["values"]);
         var connections =
             value["fields"]["connections"]["arrayValue"]["values"];
         List<Connection> connList = [];

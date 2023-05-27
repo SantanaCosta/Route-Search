@@ -162,21 +162,6 @@ class _StationRegisterPageState extends State<StationRegisterPage> {
         ));
   }
 
-  /*final stations = [
-    'Heloísa Marcela',
-    'Jairo Messias',
-    'Juca Ramos',
-    'Leonardo Amarelo',
-    'Zayon Rodrigues'
-  ];*/
-
-  Future<void> _fetchStations(BuildContext context) async {
-    // final stationProvider = Provider.of<RestDataProvider>(context);
-    // List<Station> stations = await stationProvider.fetchStations();
-    // print(stations);
-    // return stations;
-  }
-
   int line = -1;
   int row = -1;
 
@@ -218,11 +203,10 @@ class _StationRegisterPageState extends State<StationRegisterPage> {
   Widget _handleConnectionsList(BuildContext context) {
     return Expanded(
       child: FutureBuilder<List<Station>>(
-        future: _getStations(context), // a Future<List<Station>> or null
+        future: _getStations(context),
         builder: (BuildContext context, AsyncSnapshot<List<Station>> snapshot) {
           if (snapshot.hasData) {
-            List<Station> stations =
-                snapshot.data!; // aqui você tem acesso à lista de estações
+            List<Station> stations = snapshot.data!;
             return ListView.builder(
               itemCount: stations.length,
               itemBuilder: (context, index) {

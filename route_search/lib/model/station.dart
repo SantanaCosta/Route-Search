@@ -14,7 +14,7 @@ class Station {
   });
 
   factory Station.fromMap(Map<String, dynamic> map) {
-    print(map);
+    //print(map);
     final fields = map['fields'];
     final name = fields['name']['stringValue'];
     final coordX = fields['coordX']['doubleValue'];

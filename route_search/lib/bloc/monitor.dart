@@ -21,7 +21,7 @@ class MonitorBloc extends Bloc<MonitorEvent, MonitorState> {
         data.forEach((key, value) {
           Map<String, dynamic> convertedMap = value.cast<String, dynamic>();
           stationCollection.updateOrInsertStationOfId(
-              '0', Station.fromMap(convertedMap));
+              key, Station.fromMap(convertedMap));
         });
       }
       add(UpdateList());

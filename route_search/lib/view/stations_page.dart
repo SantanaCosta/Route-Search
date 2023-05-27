@@ -40,6 +40,7 @@ class _StationsPageState extends State<StationsPage> {
               trailing: Row(mainAxisSize: MainAxisSize.min, children: [
                 IconButton(
                   onPressed: () {
+                    print(stationCollection.length());
                     Navigator.pushNamed(context, '/registro');
                   },
                   icon: const Icon(Icons.edit),
