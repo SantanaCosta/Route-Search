@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:route_search/provider/rest_provider.dart';
-import 'package:provider/provider.dart';
 import '../bloc/events.dart';
 import '../bloc/manage_bloc.dart';
 import '../bloc/monitor.dart';
@@ -154,7 +152,7 @@ class _StationRegisterPageState extends State<StationRegisterPage> {
         if (colours[i][1] == Colors.grey) type = 1;
 
         connections.add(Connection(
-            stationId: stationCollection.getIdAtIndex(1), type: type));
+            stationId: stationCollection.getIdAtIndex(i), type: type));
       }
     }
 

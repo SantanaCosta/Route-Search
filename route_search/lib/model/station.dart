@@ -19,17 +19,25 @@ class Station {
     final name = fields['name']['stringValue'];
     final coordX = fields['coordX']['doubleValue'];
     final coordY = fields['coordY']['doubleValue'];
-    final connections = fields['connections']['arrayValue']['values'];
 
-    // final List<Connection> connectionList = connections.map((connection) {
-    //   return Connection.fromMap(connection['mapValue']['fields']);
-    // }).toList();
+    var connections = [];
+    List<Connection> connectionList = [];
+
+    try {
+      connections = fields['connections']['arrayValue']['values'];
+
+      if (connections.isNotEmpty) {
+        connectionList = connections.map((connection) {
+          return Connection.fromMap(connection['mapValue']['fields']);
+        }).toList();
+      }
+    } catch (error) {}
 
     return Station(
       name: name,
       coordX: coordX.toDouble(),
       coordY: coordY.toDouble(),
-      connections: [],
+      connections: connectionList,
     );
   }
 

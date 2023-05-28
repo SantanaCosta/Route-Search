@@ -8,11 +8,11 @@ class Connection {
   });
 
   Connection.fromMap(map) {
-    stationId = map['station']['stringValue'];
-    type = map['type']['intValue'];
+    stationId = map['stationId'];
+    type = map['type'];
   }
 
   toMap() {
-    return {"station": stationId, "type": type};
+    return {"stationId": stationId, "type": type};
   }
 }
