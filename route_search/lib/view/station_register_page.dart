@@ -159,6 +159,40 @@ class _StationRegisterPageState extends State<StationRegisterPage> {
     return connections;
   }
 
+  var colours;
+
+  void _displayConnections(Station station) {
+    for (int i = 0; i < station.connections.length; i++) {
+      int type = -1;
+      try {
+        type = station.connections[i].type;
+      } catch (error) {}
+
+      switch (type) {
+        case 0:
+          {
+            colours[i][0] = Colors.grey;
+            colours[i][1] = Colors.green;
+            colours[i][2] = Colors.grey;
+            break;
+          }
+        case 1:
+          {
+            colours[i][0] = Colors.grey;
+            colours[i][1] = Colors.grey;
+            colours[i][2] = Colors.amber;
+            break;
+          }
+        default:
+          {
+            colours[i][0] = Colors.red;
+            colours[i][1] = Colors.grey;
+            colours[i][2] = Colors.grey;
+          }
+      }
+    }
+  }
+
   Widget _handleSaveButton(BuildContext context) {
     return BlocBuilder<ManageBloc, ManageState>(builder: (context, state) {
       return Container(
@@ -205,7 +239,6 @@ class _StationRegisterPageState extends State<StationRegisterPage> {
   int row = -1;
 
   bool init = true;
-  List<List<Color>> colours = [];
 
   void changeButtonColour(int index, int icon) {
     setState(() {
@@ -232,35 +265,38 @@ class _StationRegisterPageState extends State<StationRegisterPage> {
     });
   }
 
-  int count = 0;
   Widget _handleConnectionsList(BuildContext context) {
     return BlocBuilder<MonitorBloc, MonitorState>(builder: (context, state) {
       StationCollection ofStationCollection = state.stationCollection;
       StationCollection stationCollection = StationCollection();
+
+      if (init) {
+        colours = List.generate(ofStationCollection.length(),
+            (i) => [Colors.red, Colors.grey, Colors.grey]);
+      }
+      init = false;
+
       if (previousId != "") {
         for (int i = 0; i < ofStationCollection.length(); i++) {
           String id = ofStationCollection.getIdAtIndex(i);
           if (id != previousId) {
             stationCollection.insertStationOfId(
                 id, ofStationCollection.getStationAtIndex(i));
+          } else {
+            if (init) {
+              _displayConnections(ofStationCollection.getStationAtIndex(i));
+            }
           }
         }
       } else {
         stationCollection = ofStationCollection;
       }
 
-      if (init) {
-        colours = List.generate(stationCollection.length(),
-            (i) => [Colors.red, Colors.grey, Colors.grey]);
-        count = stationCollection.length();
-      }
-      init = false;
-
       connections = _setConnections(stationCollection);
 
       return Expanded(
         child: ListView.builder(
-          itemCount: count,
+          itemCount: stationCollection.length(),
           itemBuilder: (context, index) {
             return ListTile(
                 title: Text(stationCollection.getStationAtIndex(index).name),

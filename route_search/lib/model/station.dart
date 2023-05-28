@@ -28,7 +28,7 @@ class Station {
 
       if (connections.isNotEmpty) {
         connectionList = connections.map((connection) {
-          return Connection.fromMap(connection['mapValue']['fields']);
+          return Connection.fromMap(connection);
         }).toList();
       }
     } catch (error) {}

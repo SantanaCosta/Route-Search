@@ -54,34 +54,4 @@ class RestDataProvider extends ChangeNotifier {
       await _dio.delete('$baseUrl' + '$stationId' + '.json');
     } catch (error) {}
   }
-
-  Future<List<Station>> getStationList() async {
-    Response response = await _dio.get('$baseUrl' + '.json');
-
-    //print(response.data);
-
-    List<Station> stList = [];
-    try {
-      response.data.forEach((key, value) {
-        //print(value["fields"]["connections"]["arrayValue"]["values"]);
-        var connections =
-            value["fields"]["connections"]["arrayValue"]["values"];
-        List<Connection> connList = [];
-        /*connList = connections.map((conn) {
-          return Connection.fromMap(conn);
-        }).toList();*/
-
-        stList.add(Station.fromMap({
-          "name": value["fields"]["name"]["stringValue"],
-          "coordX": value["fields"]["coordX"]["doubleValue"],
-          "coordY": value["fields"]["coordY"]["doubleValue"],
-          "connections": connList
-        }));
-      });
-      return stList;
-    } catch (error) {
-      print(error);
-      return stList;
-    }
-  }
 }
