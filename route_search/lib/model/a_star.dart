@@ -3,7 +3,7 @@ import 'dart:collection';
 import 'package:route_search/model/station.dart';
 import 'package:route_search/model/stationcollection.dart';
 
-class AStarSearch {
+class AStar {
   List<Station> search(StationCollection stationCollection, String originName,
       String destinationName, List<double> weigth, double speed) {
     List<Station> openNodes = [];
@@ -48,29 +48,38 @@ class AStarSearch {
           accumCost[nodeConnection] = evaluation;
           previousStation[nodeConnection] = currentNode;
           openNodes.add(nodeConnection);
+          print("Expandiu(" + currentNode.name + "): " + nodeConnection.name);
 
           if (openNodes.length > 1) {
             openNodes.sort((a, b) => (accumCost[a]!.compareTo(accumCost[b]!)));
           }
-          if (evaluation <= accumCost[openNodes[0]]!) backtrack = false;
-
-          print("[");
-          for (Station station in openNodes) {
-            print(station.name);
-          }
-          print("]");
+          List<Station> temp = openNodes;
+          temp.remove(currentNode);
+          if (temp.isNotEmpty && evaluation <= accumCost[temp[0]]!)
+            backtrack = false;
         }
+      }
+      if (!closed.contains(currentNode)) {
+        openNodes.remove(currentNode);
+        closed.add(currentNode);
       }
       if (openNodes.isEmpty) return [];
 
       currentNode = openNodes[0];
 
-      if (backtrack) route.removeLast();
+      if (backtrack) {
+        while (route.last != openNodes[0] && route.length > 1) {
+          route.removeLast();
+        }
+        if (previousStation.containsKey(currentNode) &&
+            !route.contains(previousStation[currentNode])) {
+          route.add(previousStation[currentNode]!);
+        }
+        print("Voltou");
+      }
 
       route.add(currentNode);
-
-      openNodes.remove(currentNode);
-      closed.add(currentNode);
+      print("Foi para " + currentNode.name);
 
       if (currentNode == destination) found = true;
     } while (!found);
@@ -78,6 +87,10 @@ class AStarSearch {
     for (Station station in route) {
       print(station.name);
     }
+
+    accumCost.forEach((key, value) {
+      print(key.name + ": " + value.toString());
+    });
 
     return route;
   }

@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive/hive.dart';
-import 'package:route_search/model/a_star_search.dart';
+import 'package:route_search/model/a_star.dart';
 
 import '../bloc/monitor.dart';
 import '../model/edge.dart';
@@ -296,7 +296,7 @@ class _RoutesPageState extends State<RoutesPage> {
                 _linhasSliderValue / 100.0,
                 _tempoSliderValue / 100.0
               ];
-              var a = AStarSearch().search(
+              AStar().search(
                   stationCollection,
                   _inicioTextEditingController.text,
                   _destinoTextEditingController.text,
