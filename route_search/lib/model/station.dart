@@ -1,4 +1,5 @@
 import 'connection.dart';
+import 'dart:math';
 
 class Station {
   final String name;
@@ -12,6 +13,15 @@ class Station {
     required this.coordY,
     required this.connections,
   });
+
+  List<Connection> get getConnections => connections;
+
+  double distanceTo(Station destination) {
+    double dx = destination.coordX - coordX;
+    double dy = destination.coordY - coordY;
+
+    return sqrt(dx * dx + dy * dy);
+  }
 
   void updateConnById(String stationId, int type) {
     bool found = false;

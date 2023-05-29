@@ -13,12 +13,33 @@ class StationCollection {
     return idList.length;
   }
 
+  double getDistance(String originId, Station destination) {
+    Station origin = getStationOfId(originId)!;
+
+    return origin.distanceTo(destination);
+  }
+
   String getStationIdByName(String name) {
     for (int i = 0; i < stationList.length; i++) {
-      print("name $name == stationList[$i].name " + stationList[i].name + "?");
+      //print("name $name == stationList[$i].name " + stationList[i].name + "?");
       if (stationList[i].name == name) return idList[i];
     }
     return "";
+  }
+
+  Station? getStationByName(String name) {
+    for (int i = 0; i < stationList.length; i++) {
+      //print("name $name == stationList[$i].name " + stationList[i].name + "?");
+      if (stationList[i].name == name) return stationList[i];
+    }
+    return null;
+  }
+
+  Station? getStationOfId(String stationId) {
+    for (int i = 0; i < stationList.length; i++) {
+      if (idList[i] == stationId) return stationList[i];
+    }
+    return null;
   }
 
   Station getStationAtIndex(int index) {
