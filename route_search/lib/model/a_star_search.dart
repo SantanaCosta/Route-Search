@@ -21,7 +21,10 @@ class AStarSearch {
     closed.add(currentNode);
     previousStation[currentNode] = null;
     accumCost[currentNode] = 0;
+    route.add(currentNode);
     do {
+      bool backtrack = true;
+
       for (int i = 0; i < currentNode!.getConnections.length; i++) {
         Station nodeConnection = stationCollection
             .getStationOfId(currentNode.getConnections[i].stationId)!;
@@ -37,40 +40,44 @@ class AStarSearch {
             lineChangePenalty += weigth[1];
           }
 
-          double cost = accumCost[currentNode]! + distance;
-
-          double evaluation = cost +
+          double evaluation = accumCost[currentNode]! +
               (lineChangePenalty *
-                  ((weigth[0] * distance) + weigth[2] * travelTime));
+                  (((1.0 + weigth[0]) * distance) +
+                      (1.0 + weigth[2]) * travelTime));
 
-          if (!openNodes.contains(nodeConnection) ||
-              !accumCost.containsKey(nodeConnection) ||
-              evaluation < accumCost[nodeConnection]!) {
-            accumCost[nodeConnection] = evaluation;
-            previousStation[nodeConnection] = currentNode;
-            openNodes.add(nodeConnection);
+          accumCost[nodeConnection] = evaluation;
+          previousStation[nodeConnection] = currentNode;
+          openNodes.add(nodeConnection);
+
+          if (openNodes.length > 1) {
+            openNodes.sort((a, b) => (accumCost[a]!.compareTo(accumCost[b]!)));
           }
+          if (evaluation <= accumCost[openNodes[0]]!) backtrack = false;
+
+          print("[");
+          for (Station station in openNodes) {
+            print(station.name);
+          }
+          print("]");
         }
       }
       if (openNodes.isEmpty) return [];
 
-      if (openNodes.length > 1) {
-        openNodes.sort((a, b) => (accumCost[a]!.compareTo(accumCost[b]!)));
-      }
       currentNode = openNodes[0];
+
+      if (backtrack) route.removeLast();
+
+      route.add(currentNode);
+
       openNodes.remove(currentNode);
       closed.add(currentNode);
 
       if (currentNode == destination) found = true;
     } while (!found);
-
-    Station? backtrackNode = destination;
-    while (backtrackNode != null) {
-      print(backtrackNode.name);
-      route.add(backtrackNode);
-      backtrackNode = previousStation[backtrackNode];
+    print("----------------------");
+    for (Station station in route) {
+      print(station.name);
     }
-    route = route.reversed.toList();
 
     return route;
   }
