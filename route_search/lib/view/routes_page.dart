@@ -1,10 +1,14 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive/hive.dart';
+import 'package:route_search/model/a_star_search.dart';
 
+import '../bloc/monitor.dart';
 import '../model/edge.dart';
 import '../model/graph.dart';
+import '../model/stationcollection.dart';
 import '../model/vertex.dart';
 import '../provider/rest_provider.dart';
 import 'graph_widget.dart';
@@ -270,26 +274,41 @@ class _RoutesPageState extends State<RoutesPage> {
   }
 
   Widget _handleButtons(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        ElevatedButton(
-          style: ElevatedButton.styleFrom(
-              textStyle: const TextStyle(fontSize: 20)),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          child: const Text('Cancelar'),
-        ),
-        ElevatedButton(
-          style: ElevatedButton.styleFrom(
-              textStyle: const TextStyle(fontSize: 20)),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          child: const Text('OK'),
-        ),
-      ],
-    );
+    return BlocBuilder<MonitorBloc, MonitorState>(builder: (context, state) {
+      StationCollection stationCollection = state.stationCollection;
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+                textStyle: const TextStyle(fontSize: 20)),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: const Text('Cancelar'),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+                textStyle: const TextStyle(fontSize: 20)),
+            onPressed: () {
+              List<double> weight = [
+                _distanciaSliderValue / 100.0,
+                _linhasSliderValue / 100.0,
+                _tempoSliderValue / 100.0
+              ];
+              var a = AStarSearch().search(
+                  stationCollection,
+                  _inicioTextEditingController.text,
+                  _destinoTextEditingController.text,
+                  weight,
+                  120.0);
+
+              Navigator.of(context).pop();
+            },
+            child: const Text('OK'),
+          ),
+        ],
+      );
+    });
   }
 }
