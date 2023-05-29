@@ -13,6 +13,14 @@ class StationCollection {
     return idList.length;
   }
 
+  String getStationIdByName(String name) {
+    for (int i = 0; i < stationList.length; i++) {
+      print("name $name == stationList[$i].name " + stationList[i].name + "?");
+      if (stationList[i].name == name) return idList[i];
+    }
+    return "";
+  }
+
   Station getStationAtIndex(int index) {
     Station station = stationList[index];
     return Station(

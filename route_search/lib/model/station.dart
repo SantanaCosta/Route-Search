@@ -13,11 +13,11 @@ class Station {
     required this.connections,
   });
 
-  void updateConnByName(String name, int type) {
+  void updateConnById(String stationId, int type) {
     bool found = false;
 
     for (int i = 0; i < connections.length; i++) {
-      if (connections[i].stationName == name) {
+      if (connections[i].stationId == stationId) {
         found = true;
         switch (type) {
           case -1:
@@ -36,7 +36,7 @@ class Station {
     }
 
     if (!found && type != -1) {
-      connections.add(Connection(stationName: name, type: type));
+      connections.add(Connection(stationId: stationId, type: type));
     }
   }
 

@@ -152,8 +152,7 @@ class _StationRegisterPageState extends State<StationRegisterPage> {
         if (colours[i][1] == Colors.grey) type = 1;
 
         connections.add(Connection(
-            stationName: stationCollection.getStationAtIndex(i).name,
-            type: type));
+            stationId: stationCollection.getIdAtIndex(i), type: type));
       }
     }
 
@@ -195,63 +194,73 @@ class _StationRegisterPageState extends State<StationRegisterPage> {
   }
 
   Widget _handleSaveButton(BuildContext context) {
-    return BlocBuilder<ManageBloc, ManageState>(builder: (context, state) {
-      return Container(
-          color: Colors.green,
-          margin: EdgeInsets.all(10),
-          child: SizedBox(
-            width: MediaQuery.of(context).size.width * 0.8,
-            child: ElevatedButton(
-              onPressed: () {
-                if (state is UpdateState) {
-                  if (nameValue == "") nameValue = state.previousStation.name;
-                  if (xValue == "")
-                    xValue = state.previousStation.coordX.toString();
-                  if (yValue == "")
-                    yValue = state.previousStation.coordY.toString();
-                } else {
-                  if (nameValue == "") nameValue = "Unknown";
-                  if (xValue == "") xValue = "0";
-                  if (yValue == "") yValue = "0";
-                }
-
-                Station station = Station(
-                  name: nameValue,
-                  coordX: double.parse(xValue),
-                  coordY: double.parse(yValue),
-                  connections: connections,
-                );
-                BlocProvider.of<ManageBloc>(context).add(
-                  SubmitEvent(station: station),
-                );
-
-                for (int i = 0; i < updatedStations.length; i++) {
-                  if (updatedStations[i] != -2) {
-                    BlocProvider.of<ManageBloc>(context).add(UpdateRequest(
-                      stationId: stColl.getIdAtIndex(i),
-                      previousStation: stColl.getStationAtIndex(i),
-                    ));
-
-                    Station changedStation = stColl.getStationAtIndex(i);
-
-                    changedStation.updateConnByName(
-                        nameValue, updatedStations[i]);
-
-                    BlocProvider.of<ManageBloc>(context).add(
-                      SubmitEvent(station: changedStation),
-                    );
+    return BlocBuilder<MonitorBloc, MonitorState>(
+        builder: (context, monitorState) {
+      return BlocBuilder<ManageBloc, ManageState>(
+          builder: (context, manageState) {
+        return Container(
+            color: Colors.green,
+            margin: EdgeInsets.all(10),
+            child: SizedBox(
+              width: MediaQuery.of(context).size.width * 0.8,
+              child: ElevatedButton(
+                onPressed: () {
+                  if (manageState is UpdateState) {
+                    if (nameValue == "")
+                      nameValue = manageState.previousStation.name;
+                    if (xValue == "")
+                      xValue = manageState.previousStation.coordX.toString();
+                    if (yValue == "")
+                      yValue = manageState.previousStation.coordY.toString();
+                  } else {
+                    if (nameValue == "") nameValue = "Unknown";
+                    if (xValue == "") xValue = "0";
+                    if (yValue == "") yValue = "0";
                   }
-                }
 
-                Navigator.pop(context);
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.green,
-                minimumSize: Size(0, 50),
+                  Station station = Station(
+                    name: nameValue,
+                    coordX: double.parse(xValue),
+                    coordY: double.parse(yValue),
+                    connections: connections,
+                  );
+                  BlocProvider.of<ManageBloc>(context).add(
+                    SubmitEvent(station: station),
+                  );
+
+                  // Era para atualizar o monitorState.stationCollection
+                  BlocProvider.of<MonitorBloc>(context).add(UpdateList());
+
+                  for (int i = 0; i < updatedStations.length; i++) {
+                    if (updatedStations[i] != -2) {
+                      BlocProvider.of<ManageBloc>(context).add(UpdateRequest(
+                        stationId: stColl.getIdAtIndex(i),
+                        previousStation: stColl.getStationAtIndex(i),
+                      ));
+
+                      Station changedStation = stColl.getStationAtIndex(i);
+
+                      changedStation.updateConnById(
+                          monitorState.stationCollection
+                              .getStationIdByName(nameValue),
+                          updatedStations[i]);
+
+                      BlocProvider.of<ManageBloc>(context).add(
+                        SubmitEvent(station: changedStation),
+                      );
+                    }
+                  }
+
+                  Navigator.pop(context);
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green,
+                  minimumSize: Size(0, 50),
+                ),
+                child: const Text('SALVAR'),
               ),
-              child: const Text('SALVAR'),
-            ),
-          ));
+            ));
+      });
     });
   }
 
