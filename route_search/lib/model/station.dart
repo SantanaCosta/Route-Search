@@ -13,6 +13,33 @@ class Station {
     required this.connections,
   });
 
+  void updateConnByName(String name, int type) {
+    bool found = false;
+
+    for (int i = 0; i < connections.length; i++) {
+      if (connections[i].stationName == name) {
+        found = true;
+        switch (type) {
+          case -1:
+            connections.removeAt(i);
+            break;
+          case 0:
+            connections[i].type = 0;
+            break;
+          case 1:
+            connections[i].type = 1;
+            break;
+          default:
+        }
+        break;
+      }
+    }
+
+    if (!found && type != -1) {
+      connections.add(Connection(stationName: name, type: type));
+    }
+  }
+
   factory Station.fromMap(Map<String, dynamic> map) {
     //print(map);
     final fields = map['fields'];

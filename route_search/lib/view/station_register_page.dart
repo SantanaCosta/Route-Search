@@ -152,14 +152,15 @@ class _StationRegisterPageState extends State<StationRegisterPage> {
         if (colours[i][1] == Colors.grey) type = 1;
 
         connections.add(Connection(
-            stationId: stationCollection.getIdAtIndex(i), type: type));
+            stationName: stationCollection.getStationAtIndex(i).name,
+            type: type));
       }
     }
 
     return connections;
   }
 
-  var colours;
+  List<List<Color>> colours = [];
 
   void _displayConnections(Station station) {
     for (int i = 0; i < station.connections.length; i++) {
@@ -223,6 +224,25 @@ class _StationRegisterPageState extends State<StationRegisterPage> {
                 BlocProvider.of<ManageBloc>(context).add(
                   SubmitEvent(station: station),
                 );
+
+                for (int i = 0; i < updatedStations.length; i++) {
+                  if (updatedStations[i] != -2) {
+                    BlocProvider.of<ManageBloc>(context).add(UpdateRequest(
+                      stationId: stColl.getIdAtIndex(i),
+                      previousStation: stColl.getStationAtIndex(i),
+                    ));
+
+                    Station changedStation = stColl.getStationAtIndex(i);
+
+                    changedStation.updateConnByName(
+                        nameValue, updatedStations[i]);
+
+                    BlocProvider.of<ManageBloc>(context).add(
+                      SubmitEvent(station: changedStation),
+                    );
+                  }
+                }
+
                 Navigator.pop(context);
               },
               style: ElevatedButton.styleFrom(
@@ -240,7 +260,7 @@ class _StationRegisterPageState extends State<StationRegisterPage> {
 
   bool init = true;
 
-  void changeButtonColour(int index, int icon) {
+  void _changeButtonColour(int index, int icon) {
     setState(() {
       line = index;
       row = icon;
@@ -265,6 +285,9 @@ class _StationRegisterPageState extends State<StationRegisterPage> {
     });
   }
 
+  List<int> updatedStations = [];
+  StationCollection stColl = StationCollection();
+
   Widget _handleConnectionsList(BuildContext context) {
     return BlocBuilder<MonitorBloc, MonitorState>(builder: (context, state) {
       StationCollection ofStationCollection = state.stationCollection;
@@ -272,11 +295,16 @@ class _StationRegisterPageState extends State<StationRegisterPage> {
 
       if (init) {
         colours = List.generate(ofStationCollection.length(),
-            (i) => [Colors.red, Colors.grey, Colors.grey]);
+            (index) => [Colors.red, Colors.grey, Colors.grey]);
+        updatedStations =
+            List.generate(ofStationCollection.length(), (index) => -2);
       }
-      init = false;
 
       if (previousId != "") {
+        if (init) {
+          colours.removeLast();
+          updatedStations.removeLast();
+        }
         for (int i = 0; i < ofStationCollection.length(); i++) {
           String id = ofStationCollection.getIdAtIndex(i);
           if (id != previousId) {
@@ -291,8 +319,10 @@ class _StationRegisterPageState extends State<StationRegisterPage> {
       } else {
         stationCollection = ofStationCollection;
       }
+      init = false;
 
       connections = _setConnections(stationCollection);
+      stColl = stationCollection;
 
       return Expanded(
         child: ListView.builder(
@@ -303,19 +333,22 @@ class _StationRegisterPageState extends State<StationRegisterPage> {
                 trailing: Row(mainAxisSize: MainAxisSize.min, children: [
                   IconButton(
                       onPressed: () {
-                        changeButtonColour(index, 0);
+                        _changeButtonColour(index, 0);
+                        updatedStations[index] = -1;
                       },
                       icon: const Icon(Icons.cancel),
                       color: colours[index][0]),
                   IconButton(
                       onPressed: () {
-                        changeButtonColour(index, 1);
+                        _changeButtonColour(index, 1);
+                        updatedStations[index] = 0;
                       },
                       icon: const Icon(Icons.check_circle),
                       color: colours[index][1]),
                   IconButton(
                       onPressed: () {
-                        changeButtonColour(index, 2);
+                        _changeButtonColour(index, 2);
+                        updatedStations[index] = 1;
                       },
                       icon: const Icon(Icons.offline_bolt),
                       color: colours[index][2]),
