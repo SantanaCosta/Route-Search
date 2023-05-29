@@ -27,8 +27,8 @@ class _RoutesPageState extends State<RoutesPage> {
   final _inicioTextEditingController = TextEditingController();
   final _destinoTextEditingController = TextEditingController();
   double _distanciaSliderValue = 0;
-  double _rapidezSliderValue = 0;
-  double _paradasSliderValue = 0;
+  double _tempoSliderValue = 0;
+  double _linhasSliderValue = 0;
   final StreamController<double> _streamController = StreamController<double>();
 
   @override
@@ -143,18 +143,19 @@ class _RoutesPageState extends State<RoutesPage> {
   Widget _handleSliders() {
     final _distanciaValueNotifier =
         ValueNotifier<double>(_distanciaSliderValue);
-    final _paradasValueNotifier = ValueNotifier<double>(_paradasSliderValue);
-    final _rapidezValueNotifier = ValueNotifier<double>(_rapidezSliderValue);
+    final _trocasLinhasValueNotifier =
+        ValueNotifier<double>(_linhasSliderValue);
+    final _tempoValueNotifier = ValueNotifier<double>(_tempoSliderValue);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // const Text(
-        //   "Prioridade",
-        //   style: TextStyle(fontSize: 20),
-        // ),
         const Text(
-          "Menor Distancia",
+          "Níveis de prioridade",
+          style: TextStyle(fontSize: 20),
+        ),
+        const Text(
+          "Menor Distância",
           style: TextStyle(fontSize: 14),
         ),
         Row(
@@ -191,14 +192,14 @@ class _RoutesPageState extends State<RoutesPage> {
           ],
         ),
         const Text(
-          "Poucas paradas",
+          "Poucas trocas de linha",
           style: TextStyle(fontSize: 14),
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             ValueListenableBuilder<double>(
-              valueListenable: _paradasValueNotifier,
+              valueListenable: _trocasLinhasValueNotifier,
               builder: (context, value, child) {
                 return Slider(
                   value: value,
@@ -206,8 +207,8 @@ class _RoutesPageState extends State<RoutesPage> {
                   divisions: 5,
                   label: value.round().toString(),
                   onChanged: (double newValue) {
-                    _paradasValueNotifier.value = newValue;
-                    _paradasSliderValue = newValue;
+                    _trocasLinhasValueNotifier.value = newValue;
+                    _linhasSliderValue = newValue;
                   },
                 );
               },
@@ -218,7 +219,7 @@ class _RoutesPageState extends State<RoutesPage> {
               color: Colors.grey[300],
               child: Center(
                 child: ValueListenableBuilder<double>(
-                  valueListenable: _paradasValueNotifier,
+                  valueListenable: _trocasLinhasValueNotifier,
                   builder: (context, value, child) {
                     return Text(value.round().toString());
                   },
@@ -228,14 +229,14 @@ class _RoutesPageState extends State<RoutesPage> {
           ],
         ),
         const Text(
-          "Rapidez",
+          "Menor tempo",
           style: TextStyle(fontSize: 14),
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             ValueListenableBuilder<double>(
-              valueListenable: _rapidezValueNotifier,
+              valueListenable: _tempoValueNotifier,
               builder: (context, value, child) {
                 return Slider(
                   value: value,
@@ -243,8 +244,8 @@ class _RoutesPageState extends State<RoutesPage> {
                   divisions: 5,
                   label: value.round().toString(),
                   onChanged: (double newValue) {
-                    _rapidezValueNotifier.value = newValue;
-                    _rapidezSliderValue = newValue;
+                    _tempoValueNotifier.value = newValue;
+                    _tempoSliderValue = newValue;
                   },
                 );
               },
@@ -255,7 +256,7 @@ class _RoutesPageState extends State<RoutesPage> {
               color: Colors.grey[300],
               child: Center(
                 child: ValueListenableBuilder<double>(
-                  valueListenable: _rapidezValueNotifier,
+                  valueListenable: _tempoValueNotifier,
                   builder: (context, value, child) {
                     return Text(value.round().toString());
                   },

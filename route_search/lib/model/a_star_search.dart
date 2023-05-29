@@ -4,13 +4,6 @@ import 'package:route_search/model/stationcollection.dart';
 import 'connection.dart';
 
 class AStarSearch {
-  double travelTime(Station station, Station destination, int type,
-      double speed, double distance) {
-    if (type == 1) speed *= 1.5;
-
-    return distance / speed;
-  }
-
   List<Station> search(StationCollection stationCollection, String originName,
       String destinationName, int weigth, double speed) {
     Map<Station, double> open = {};
@@ -31,7 +24,7 @@ class AStarSearch {
 
         if (currentNode.getConnections[i].type == 1) speed *= 1.5;
 
-        double travelTime = distance / speed;
+        double travelTime = currentNode.distanceTo(nodeConnection) / speed;
       }
     } while (!found);
 

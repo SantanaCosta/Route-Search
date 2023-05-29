@@ -33,7 +33,6 @@ class _StationsPageState extends State<StationsPage> {
               trailing: Row(mainAxisSize: MainAxisSize.min, children: [
                 IconButton(
                   onPressed: () {
-                    print(stationCollection.length());
                     BlocProvider.of<ManageBloc>(context).add(UpdateRequest(
                       stationId: stationCollection.getIdAtIndex(index),
                       previousStation:

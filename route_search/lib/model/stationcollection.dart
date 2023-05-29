@@ -48,6 +48,7 @@ class StationCollection {
         name: station.name,
         coordX: station.coordX,
         coordY: station.coordY,
+        line: station.line,
         connections: station.connections);
   }
 
@@ -67,6 +68,7 @@ class StationCollection {
           name: station.name,
           coordX: station.coordX,
           coordY: station.coordY,
+          line: station.line,
           connections: station.connections);
     } else {
       // Insert
@@ -75,6 +77,7 @@ class StationCollection {
           name: station.name,
           coordX: station.coordX,
           coordY: station.coordY,
+          line: station.line,
           connections: station.connections));
     }
   }
@@ -86,6 +89,7 @@ class StationCollection {
           name: station.name,
           coordX: station.coordX,
           coordY: station.coordY,
+          line: station.line,
           connections: station.connections);
     }
   }
@@ -104,6 +108,7 @@ class StationCollection {
         name: station.name,
         coordX: station.coordX,
         coordY: station.coordY,
+        line: station.line,
         connections: station.connections));
   }
 }

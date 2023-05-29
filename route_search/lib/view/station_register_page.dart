@@ -38,6 +38,7 @@ class _StationRegisterPageState extends State<StationRegisterPage> {
   String nameValue = "";
   String xValue = "";
   String yValue = "";
+  String lineValue = "";
   String previousId = "";
 
   Widget _handleTextFields(BuildContext context) {
@@ -86,6 +87,21 @@ class _StationRegisterPageState extends State<StationRegisterPage> {
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
                       labelText: 'Y',
+                    )),
+              ),
+              SizedBox(height: 70, width: 10),
+              SizedBox(
+                width: 85,
+                child: TextFormField(
+                    initialValue: state is UpdateState
+                        ? state.previousStation.line.toString()
+                        : "",
+                    onChanged: (value) {
+                      lineValue = value;
+                    },
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Nº linha',
                     )),
               ),
             ],
@@ -212,16 +228,20 @@ class _StationRegisterPageState extends State<StationRegisterPage> {
                       xValue = manageState.previousStation.coordX.toString();
                     if (yValue == "")
                       yValue = manageState.previousStation.coordY.toString();
+                    if (lineValue == "")
+                      lineValue = manageState.previousStation.line.toString();
                   } else {
                     if (nameValue == "") nameValue = "Unknown";
                     if (xValue == "") xValue = "0";
                     if (yValue == "") yValue = "0";
+                    if (lineValue == "") lineValue = "0";
                   }
 
                   Station station = Station(
                     name: nameValue,
                     coordX: double.parse(xValue),
                     coordY: double.parse(yValue),
+                    line: int.parse(lineValue),
                     connections: connections,
                   );
                   BlocProvider.of<ManageBloc>(context).add(

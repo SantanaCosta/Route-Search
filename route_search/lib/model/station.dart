@@ -5,12 +5,14 @@ class Station {
   final String name;
   final double coordX;
   final double coordY;
+  final int line;
   final List<Connection> connections;
 
   Station({
     required this.name,
     required this.coordX,
     required this.coordY,
+    required this.line,
     required this.connections,
   });
 
@@ -56,6 +58,7 @@ class Station {
     final name = fields['name']['stringValue'];
     final coordX = fields['coordX']['doubleValue'];
     final coordY = fields['coordY']['doubleValue'];
+    final line = fields['line']['intValue'];
 
     var connections = [];
     List<Connection> connectionList = [];
@@ -74,6 +77,7 @@ class Station {
       name: name,
       coordX: coordX.toDouble(),
       coordY: coordY.toDouble(),
+      line: line,
       connections: connectionList,
     );
   }
@@ -83,6 +87,7 @@ class Station {
       'name': {'stringValue': name},
       'coordX': {'doubleValue': coordX},
       'coordY': {'doubleValue': coordY},
+      'line': {'intValue': line},
       'connections': {
         'arrayValue': {
           'values': connections.map((connection) => connection.toMap()).toList()
