@@ -60,6 +60,13 @@ class StationCollection {
     return idList.indexOf(id);
   }
 
+  int getIndexOfStationId(String stationId) {
+    for (int i = 0; i < stationList.length; i++) {
+      if (idList[i] == stationId) return i;
+    }
+    return -1;
+  }
+
   updateOrInsertStationOfId(String id, Station station) {
     int index = getIndexOfId(id);
     if (index != -1) {

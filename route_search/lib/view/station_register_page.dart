@@ -177,33 +177,37 @@ class _StationRegisterPageState extends State<StationRegisterPage> {
 
   List<List<Color>> colours = [];
 
-  void _displayConnections(Station station) {
+  void _displayConnections(
+      Station station, StationCollection stationCollection) {
     for (int i = 0; i < station.connections.length; i++) {
       int type = -1;
       try {
         type = station.connections[i].type;
       } catch (error) {}
 
+      int index = stationCollection
+          .getIndexOfStationId(station.connections[i].stationId);
+
       switch (type) {
         case 0:
           {
-            colours[i][0] = Colors.grey;
-            colours[i][1] = Colors.green;
-            colours[i][2] = Colors.grey;
+            colours[index][0] = Colors.grey;
+            colours[index][1] = Colors.green;
+            colours[index][2] = Colors.grey;
             break;
           }
         case 1:
           {
-            colours[i][0] = Colors.grey;
-            colours[i][1] = Colors.grey;
-            colours[i][2] = Colors.amber;
+            colours[index][0] = Colors.grey;
+            colours[index][1] = Colors.grey;
+            colours[index][2] = Colors.amber;
             break;
           }
         default:
           {
-            colours[i][0] = Colors.red;
-            colours[i][1] = Colors.grey;
-            colours[i][2] = Colors.grey;
+            colours[index][0] = Colors.red;
+            colours[index][1] = Colors.grey;
+            colours[index][2] = Colors.grey;
           }
       }
     }
@@ -330,20 +334,18 @@ class _StationRegisterPageState extends State<StationRegisterPage> {
       }
 
       if (previousId != "") {
-        if (init) {
-          colours.removeLast();
-          updatedStations.removeLast();
-        }
         for (int i = 0; i < ofStationCollection.length(); i++) {
           String id = ofStationCollection.getIdAtIndex(i);
           if (id != previousId) {
             stationCollection.insertStationOfId(
                 id, ofStationCollection.getStationAtIndex(i));
-          } else {
-            if (init) {
-              _displayConnections(ofStationCollection.getStationAtIndex(i));
-            }
           }
+        }
+        if (init) {
+          colours.removeLast();
+          updatedStations.removeLast();
+          _displayConnections(ofStationCollection.getStationOfId(previousId)!,
+              stationCollection);
         }
       } else {
         stationCollection = ofStationCollection;
