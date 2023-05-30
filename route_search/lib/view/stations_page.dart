@@ -5,6 +5,8 @@ import 'package:route_search/model/stationcollection.dart';
 
 import '../bloc/events.dart';
 import '../bloc/manage_bloc.dart';
+import '../model/connection.dart';
+import '../model/station.dart';
 
 class StationsPage extends StatefulWidget {
   const StationsPage({super.key});
@@ -44,8 +46,28 @@ class _StationsPageState extends State<StationsPage> {
                 ),
                 IconButton(
                   onPressed: () {
+                    String deletedStationId =
+                        stationCollection.getIdAtIndex(index);
+                    List<Connection> deletedConns =
+                        stationCollection.getStationAtIndex(index).connections;
+                    for (Connection conn in deletedConns) {
+                      Station changedStation =
+                          stationCollection.getStationOfId(conn.stationId)!;
+
+                      BlocProvider.of<ManageBloc>(context).add(UpdateRequest(
+                        stationId: conn.stationId,
+                        previousStation: changedStation,
+                      ));
+
+                      changedStation.updateConnById(deletedStationId, -1);
+
+                      BlocProvider.of<ManageBloc>(context).add(
+                        SubmitEvent(station: changedStation),
+                      );
+                    }
+
                     BlocProvider.of<ManageBloc>(context).add(DeleteEvent(
-                      stationId: stationCollection.getIdAtIndex(index),
+                      stationId: deletedStationId,
                     ));
                     stationCollection.deleteStationOfId(
                         stationCollection.getIdAtIndex(index));
