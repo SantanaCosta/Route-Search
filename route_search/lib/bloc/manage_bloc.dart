@@ -1,6 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:route_search/bloc/states.dart';
-import '../model/station.dart';
 import '../provider/rest_provider.dart';
 import 'events.dart';
 

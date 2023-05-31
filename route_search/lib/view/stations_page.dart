@@ -87,12 +87,12 @@ class _StationsPageState extends State<StationsPage> {
         bottom: alturaTela * 0.1,
         right: larguraTela * 0.1,
         child: FloatingActionButton(
-          child: Icon(Icons.add),
           backgroundColor: Colors.blue,
           onPressed: () {
             BlocProvider.of<ManageBloc>(context).add(InsertEvent());
             Navigator.pushNamed(context, '/registro');
           },
+          child: const Icon(Icons.add),
         ));
   }
 }

@@ -2,15 +2,14 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hive/hive.dart';
 import 'package:route_search/model/a_star.dart';
 
 import '../bloc/monitor.dart';
 import '../model/edge.dart';
 import '../model/graph.dart';
+import '../model/station.dart';
 import '../model/stationcollection.dart';
 import '../model/vertex.dart';
-import '../provider/rest_provider.dart';
 import 'graph_widget.dart';
 
 class RoutesPage extends StatefulWidget {
@@ -21,13 +20,6 @@ class RoutesPage extends StatefulWidget {
 }
 
 class _RoutesPageState extends State<RoutesPage> {
-  final vertex1 = Vertex(x: 150, y: 100);
-  final vertex2 = Vertex(x: -80, y: 80);
-  final vertex3 = Vertex(x: 90, y: 120);
-  final vertex4 = Vertex(x: 185, y: 70);
-  final vertex5 = Vertex(x: 100, y: 50);
-  final vertex6 = Vertex(x: -50, y: 200);
-
   final _inicioTextEditingController = TextEditingController();
   final _destinoTextEditingController = TextEditingController();
   double _distanciaSliderValue = 0;
@@ -37,50 +29,25 @@ class _RoutesPageState extends State<RoutesPage> {
 
   @override
   Widget build(BuildContext context) {
-    final graph = Graph(vertices: [
-      vertex1,
-      vertex2,
-      vertex3,
-      vertex4,
-      vertex5,
-      vertex6,
-    ], edges: [
-      Edge(start: vertex1, end: vertex2),
-      Edge(start: vertex1, end: vertex3),
-      Edge(start: vertex1, end: vertex4),
-      Edge(start: vertex1, end: vertex5),
-      Edge(start: vertex1, end: vertex6),
-      Edge(start: vertex2, end: vertex3),
-      Edge(start: vertex2, end: vertex4),
-      Edge(start: vertex2, end: vertex5),
-      Edge(start: vertex2, end: vertex6),
-      Edge(start: vertex3, end: vertex4),
-      Edge(start: vertex3, end: vertex5),
-      Edge(start: vertex3, end: vertex6),
-      Edge(start: vertex4, end: vertex5),
-      Edge(start: vertex4, end: vertex6),
-      Edge(start: vertex5, end: vertex6),
-    ]);
-
     return Stack(
-      children: [
-        _handleGraphWidget(graph),
-        _handleFloatingActionButton(context)
-      ],
+      children: [_handleGraphWidget(), _handleFloatingActionButton(context)],
     );
   }
 
-  Widget _handleGraphWidget(Graph graph) {
-    return InteractiveViewer(
-      constrained: false,
-      child: GraphWidget(
-        graph: graph,
-        vertexColor: Colors.blue,
-        vertexRadius: 10,
-        edgeColor: Colors.black,
-        edgeWidth: 2.0,
-      ),
-    );
+  Widget _handleGraphWidget() {
+    return BlocBuilder<MonitorBloc, MonitorState>(builder: (context, state) {
+      StationCollection stationCollection = state.stationCollection;
+      return InteractiveViewer(
+        constrained: false,
+        child: GraphWidget(
+          graph: toGraph(stationCollection),
+          vertexColor: Colors.blue,
+          vertexRadius: 10,
+          edgeColor: Colors.black,
+          edgeWidth: 2.0,
+        ),
+      );
+    });
   }
 
   Widget _handleFloatingActionButton(BuildContext context) {
@@ -310,5 +277,28 @@ class _RoutesPageState extends State<RoutesPage> {
         ],
       );
     });
+  }
+
+  Graph toGraph(StationCollection stationCollection) {
+    Graph graph = Graph.empty();
+
+    for (int i = 0; i < stationCollection.length(); i++) {
+      Station station = stationCollection.stationList[i];
+      Vertex stationVertex = Vertex(x: station.coordX, y: station.coordY);
+
+      graph.vertices.add(stationVertex);
+
+      for (int j = 0; j < station.connections.length; j++) {
+        Station connectedStation =
+            stationCollection.getStationOfId(station.connections[j].stationId)!;
+
+        graph.edges.add(Edge(
+            start: stationVertex,
+            end: Vertex(
+                x: connectedStation.coordX, y: connectedStation.coordY)));
+      }
+    }
+
+    return graph;
   }
 }

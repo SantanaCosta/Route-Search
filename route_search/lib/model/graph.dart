@@ -6,4 +6,8 @@ class Graph {
   final List<Edge> edges;
 
   Graph({required this.vertices, required this.edges});
+
+  Graph.empty()
+      : vertices = [],
+        edges = [];
 }

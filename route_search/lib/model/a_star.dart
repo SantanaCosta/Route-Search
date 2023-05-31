@@ -1,5 +1,3 @@
-import 'dart:collection';
-
 import 'package:route_search/model/station.dart';
 import 'package:route_search/model/stationcollection.dart';
 

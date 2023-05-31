@@ -1,9 +1,5 @@
-import 'dart:convert';
-
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
-
-import '../model/connection.dart';
 import '../model/station.dart';
 
 class RestDataProvider extends ChangeNotifier {
