@@ -13,7 +13,8 @@ class AStar {
       String destinationName,
       List<double> weigth,
       double speed,
-      StreamController<Graph> graph) {
+      StreamController<Graph> graph,
+      Graph graphValue) {
     List<Station> openNodes = [];
     List<Station> closed = [];
     Map<Station, Station?> previousStation = {};
@@ -25,6 +26,7 @@ class AStar {
     if (currentNode == null || destination == null) return route;
 
     bool found = false;
+    graph.add(graphValue);
 
     closed.add(currentNode);
     previousStation[currentNode] = null;
@@ -83,20 +85,18 @@ class AStar {
 
       currentNode = openNodes[0];
 
-      graph.stream.listen((value) {
-        int indexToUpdate = -1;
-        for (int i = 0; i < value.vertices.length; i++) {
-          if (value.vertices[i].x == currentNode?.coordX &&
-              value.vertices[i].y == currentNode?.coordY) {
-            indexToUpdate = i;
-            break;
-          }
+      int indexToUpdate = -1;
+      for (int i = 0; i < graphValue.vertices.length; i++) {
+        if (graphValue.vertices[i].x == currentNode?.coordX &&
+            graphValue.vertices[i].y == currentNode?.coordY) {
+          indexToUpdate = i;
+          break;
         }
+      }
 
-        value.vertices[indexToUpdate].color = Colors.red;
+      graphValue.vertices[indexToUpdate].color = Colors.red;
 
-        graph.add(value);
-      });
+      graph.add(graphValue);
 
       print("Foi para " + currentNode.name);
 

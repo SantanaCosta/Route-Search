@@ -27,9 +27,12 @@ class _RoutesPageState extends State<RoutesPage> {
   double _linhasSliderValue = 0;
   final StreamController<double> _streamController = StreamController<double>();
   final StreamController<Graph> _graph = StreamController<Graph>();
+  Graph oldValue = Graph.empty();
 
   @override
   Widget build(BuildContext context) {
+    _graph.add(Graph.empty());
+
     return Stack(
       children: [_handleGraphWidget(), _handleFloatingActionButton(context)],
     );
@@ -44,12 +47,18 @@ class _RoutesPageState extends State<RoutesPage> {
         child: StreamBuilder<Graph>(
             stream: _graph.stream,
             builder: (context, snapshot) {
-              return GraphWidget(
-                graph: snapshot.data!,
-                vertexRadius: 10,
-                edgeColor: Colors.black,
-                edgeWidth: 2.0,
-              );
+              if (snapshot.hasData) {
+                oldValue = snapshot.data as Graph;
+
+                return GraphWidget(
+                  graph: snapshot.data as Graph,
+                  vertexRadius: 10,
+                  edgeColor: Colors.black,
+                  edgeWidth: 2.0,
+                );
+              } else {
+                return Text('Erro: ${snapshot.error}');
+              }
             }),
       );
     });
@@ -274,7 +283,8 @@ class _RoutesPageState extends State<RoutesPage> {
                   _destinoTextEditingController.text,
                   weight,
                   120.0,
-                  _graph);
+                  _graph,
+                  oldValue);
 
               Navigator.of(context).pop();
             },
