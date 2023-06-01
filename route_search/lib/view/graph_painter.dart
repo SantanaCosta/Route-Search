@@ -4,13 +4,11 @@ import '../model/graph.dart';
 
 class GraphPainter extends CustomPainter {
   final Graph graph;
-  final Color vertexColor;
   final double vertexRadius;
   final Color edgeColor;
   final double edgeWidth;
 
-  GraphPainter(this.graph, this.vertexColor, this.vertexRadius, this.edgeColor,
-      this.edgeWidth);
+  GraphPainter(this.graph, this.vertexRadius, this.edgeColor, this.edgeWidth);
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -34,7 +32,7 @@ class GraphPainter extends CustomPainter {
         center,
         vertexRadius,
         Paint()
-          ..color = vertexColor
+          ..color = vertex.color
           ..strokeWidth = 1.0,
       );
     }

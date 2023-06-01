@@ -1,9 +1,19 @@
+import 'dart:async';
+
+import 'package:flutter/material.dart';
+import 'package:route_search/model/graph.dart';
 import 'package:route_search/model/station.dart';
 import 'package:route_search/model/stationcollection.dart';
+import 'package:route_search/model/vertex.dart';
 
 class AStar {
-  List<Station> search(StationCollection stationCollection, String originName,
-      String destinationName, List<double> weigth, double speed) {
+  List<Station> search(
+      StationCollection stationCollection,
+      String originName,
+      String destinationName,
+      List<double> weigth,
+      double speed,
+      StreamController<Graph> graph) {
     List<Station> openNodes = [];
     List<Station> closed = [];
     Map<Station, Station?> previousStation = {};
@@ -72,6 +82,22 @@ class AStar {
       if (openNodes.isEmpty) return [];
 
       currentNode = openNodes[0];
+
+      graph.stream.listen((value) {
+        int indexToUpdate = -1;
+        for (int i = 0; i < value.vertices.length; i++) {
+          if (value.vertices[i].x == currentNode?.coordX &&
+              value.vertices[i].y == currentNode?.coordY) {
+            indexToUpdate = i;
+            break;
+          }
+        }
+
+        value.vertices[indexToUpdate].color = Colors.red;
+
+        graph.add(value);
+      });
+
       print("Foi para " + currentNode.name);
 
       if (currentNode == destination) found = true;

@@ -4,7 +4,6 @@ import 'graph_painter.dart';
 
 class GraphWidget extends StatelessWidget {
   final Graph graph;
-  final Color vertexColor;
   final double vertexRadius;
   final Color edgeColor;
   final double edgeWidth;
@@ -12,7 +11,6 @@ class GraphWidget extends StatelessWidget {
   const GraphWidget({
     super.key,
     required this.graph,
-    this.vertexColor = Colors.black,
     this.vertexRadius = 8.0,
     this.edgeColor = Colors.black,
     this.edgeWidth = 1.0,
@@ -28,7 +26,6 @@ class GraphWidget extends StatelessWidget {
             canvasSizeWidth, canvasSizeHeight), // Define o tamanho do canvas
         painter: GraphPainter(
           graph,
-          vertexColor,
           vertexRadius,
           edgeColor,
           edgeWidth,

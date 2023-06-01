@@ -26,6 +26,7 @@ class _RoutesPageState extends State<RoutesPage> {
   double _tempoSliderValue = 0;
   double _linhasSliderValue = 0;
   final StreamController<double> _streamController = StreamController<double>();
+  final StreamController<Graph> _graph = StreamController<Graph>();
 
   @override
   Widget build(BuildContext context) {
@@ -37,15 +38,19 @@ class _RoutesPageState extends State<RoutesPage> {
   Widget _handleGraphWidget() {
     return BlocBuilder<MonitorBloc, MonitorState>(builder: (context, state) {
       StationCollection stationCollection = state.stationCollection;
+      _graph.add(toGraph(stationCollection));
       return InteractiveViewer(
         constrained: false,
-        child: GraphWidget(
-          graph: toGraph(stationCollection),
-          vertexColor: Colors.blue,
-          vertexRadius: 10,
-          edgeColor: Colors.black,
-          edgeWidth: 2.0,
-        ),
+        child: StreamBuilder<Graph>(
+            stream: _graph.stream,
+            builder: (context, snapshot) {
+              return GraphWidget(
+                graph: snapshot.data!,
+                vertexRadius: 10,
+                edgeColor: Colors.black,
+                edgeWidth: 2.0,
+              );
+            }),
       );
     });
   }
@@ -268,7 +273,8 @@ class _RoutesPageState extends State<RoutesPage> {
                   _inicioTextEditingController.text,
                   _destinoTextEditingController.text,
                   weight,
-                  120.0);
+                  120.0,
+                  _graph);
 
               Navigator.of(context).pop();
             },
