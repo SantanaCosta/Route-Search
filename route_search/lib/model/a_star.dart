@@ -25,6 +25,14 @@ class AStar {
             .getStationOfId(currentNode.getConnections[i].stationId)!;
 
         if (!closed.contains(nodeConnection)) {
+          double totalWeigth = weigth[0] + weigth[1] + weigth[2];
+
+          if (totalWeigth > 0) {
+            weigth[0] /= totalWeigth;
+            weigth[1] /= totalWeigth;
+            weigth[2] /= totalWeigth;
+          }
+
           double distance = nodeConnection.distanceTo(destination);
 
           if (currentNode.getConnections[i].type == 1) speed *= 1.5;
@@ -35,12 +43,10 @@ class AStar {
             lineChangePenalty += weigth[1];
           }
 
-          // REVER DEPOIS --> NORMALIZAR PESOS
+          // DIMINUIR DISPARIDADE ENTRE DISTANCE E TRAVELTIME
           double evaluation = accumCost[currentNode]! +
               (lineChangePenalty *
-                  (1.0 +
-                      (((1.0 + weigth[0]) * distance) +
-                          (1.0 + weigth[2]) * travelTime)));
+                  (1.0 + ((weigth[0] * distance) + (weigth[2] * travelTime))));
 
           accumCost[nodeConnection] = evaluation;
 
