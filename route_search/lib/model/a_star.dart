@@ -19,10 +19,7 @@ class AStar {
     closed.add(currentNode);
     previousStation[currentNode] = null;
     accumCost[currentNode] = 0;
-    route.add(currentNode);
     do {
-      bool backtrack = true;
-
       for (int i = 0; i < currentNode!.getConnections.length; i++) {
         Station nodeConnection = stationCollection
             .getStationOfId(currentNode.getConnections[i].stationId)!;
@@ -38,13 +35,20 @@ class AStar {
             lineChangePenalty += weigth[1];
           }
 
+          // REVER DEPOIS --> NORMALIZAR PESOS
           double evaluation = accumCost[currentNode]! +
               (lineChangePenalty *
-                  (((1.0 + weigth[0]) * distance) +
-                      (1.0 + weigth[2]) * travelTime));
+                  (1.0 +
+                      (((1.0 + weigth[0]) * distance) +
+                          (1.0 + weigth[2]) * travelTime)));
 
           accumCost[nodeConnection] = evaluation;
-          previousStation[nodeConnection] = currentNode;
+
+          if (!previousStation.containsKey(nodeConnection) ||
+              accumCost[previousStation[nodeConnection]]! < evaluation) {
+            previousStation[nodeConnection] = currentNode;
+          }
+
           openNodes.add(nodeConnection);
           print("Expandiu(" + currentNode.name + "): " + nodeConnection.name);
 
@@ -53,8 +57,6 @@ class AStar {
           }
           List<Station> temp = openNodes;
           temp.remove(currentNode);
-          if (temp.isNotEmpty && evaluation <= accumCost[temp[0]]!)
-            backtrack = false;
         }
       }
       if (!closed.contains(currentNode)) {
@@ -64,23 +66,11 @@ class AStar {
       if (openNodes.isEmpty) return [];
 
       currentNode = openNodes[0];
-
-      if (backtrack) {
-        while (route.last != openNodes[0] && route.length > 1) {
-          route.removeLast();
-        }
-        if (previousStation.containsKey(currentNode) &&
-            !route.contains(previousStation[currentNode])) {
-          route.add(previousStation[currentNode]!);
-        }
-        print("Voltou");
-      }
-
-      route.add(currentNode);
       print("Foi para " + currentNode.name);
 
       if (currentNode == destination) found = true;
     } while (!found);
+
     print("----------------------");
     for (Station station in route) {
       print(station.name);
@@ -89,6 +79,14 @@ class AStar {
     accumCost.forEach((key, value) {
       print(key.name + ": " + value.toString());
     });
+
+    Station? backtrackNode = destination;
+    while (backtrackNode != null) {
+      print(backtrackNode.name);
+      route.add(backtrackNode);
+      backtrackNode = previousStation[backtrackNode];
+    }
+    route = route.reversed.toList();
 
     return route;
   }
