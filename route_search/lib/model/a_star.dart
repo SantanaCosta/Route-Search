@@ -25,6 +25,14 @@ class AStar {
     Station? destination = stationCollection.getStationByName(destinationName);
     if (currentNode == null || destination == null) return route;
 
+    // Ajustando pesos
+    double totalWeigth = weigth[0] + weigth[1] + weigth[2];
+    if (totalWeigth > 0) {
+      weigth[0] /= totalWeigth;
+      weigth[1] /= totalWeigth;
+      weigth[2] /= totalWeigth;
+    }
+
     bool found = false;
     graph.add(graphValue);
 
@@ -32,49 +40,46 @@ class AStar {
     previousStation[currentNode] = null;
     accumCost[currentNode] = 0;
     do {
+      // Descobrindo conexões do nó atual
       for (int i = 0; i < currentNode!.getConnections.length; i++) {
         Station nodeConnection = stationCollection
             .getStationOfId(currentNode.getConnections[i].stationId)!;
 
         if (!closed.contains(nodeConnection)) {
-          double totalWeigth = weigth[0] + weigth[1] + weigth[2];
-
-          if (totalWeigth > 0) {
-            weigth[0] /= totalWeigth;
-            weigth[1] /= totalWeigth;
-            weigth[2] /= totalWeigth;
-          }
-
-          double distance = nodeConnection.distanceTo(destination);
+          double distanceToDestination = nodeConnection.distanceTo(destination);
+          double distanceToNextStation = currentNode.distanceTo(nodeConnection);
 
           if (currentNode.getConnections[i].type == 1) speed *= 1.5;
-          double travelTime = currentNode.distanceTo(nodeConnection) / speed;
+          double travelTime = distanceToNextStation / speed;
 
-          double lineChangePenalty = 1.0;
+          double lineChange = 0.0;
           if (currentNode.line != nodeConnection.line) {
-            lineChangePenalty += weigth[1];
+            lineChange = (distanceToNextStation + travelTime) / 2.0;
           }
 
-          // DIMINUIR DISPARIDADE ENTRE DISTANCE E TRAVELTIME
+          // Função de avaliação da conexão i
           double evaluation = accumCost[currentNode]! +
-              (lineChangePenalty *
-                  (1.0 + ((weigth[0] * distance) + (weigth[2] * travelTime))));
+              (weigth[0] * distanceToDestination) +
+              (weigth[1] * lineChange) +
+              (weigth[2] * travelTime);
 
+          // Armazenando avaliação da conexão i
           accumCost[nodeConnection] = evaluation;
 
+          // Definindo melhor estação anterior da conexão i
           if (!previousStation.containsKey(nodeConnection) ||
               accumCost[previousStation[nodeConnection]]! < evaluation) {
             previousStation[nodeConnection] = currentNode;
           }
 
+          // Adicionando conexão i na lista de abertos
           openNodes.add(nodeConnection);
           print("Expandiu(" + currentNode.name + "): " + nodeConnection.name);
 
+          // Ordenando lista de abertos conforme avaliações
           if (openNodes.length > 1) {
             openNodes.sort((a, b) => (accumCost[a]!.compareTo(accumCost[b]!)));
           }
-          List<Station> temp = openNodes;
-          temp.remove(currentNode);
         }
       }
       if (!closed.contains(currentNode)) {
@@ -83,8 +88,11 @@ class AStar {
       }
       if (openNodes.isEmpty) return [];
 
+      // Definindo nó atual como o melhor da lista de abertos
       currentNode = openNodes[0];
+      print("Foi para " + currentNode.name);
 
+      // Atualizando cor do nó a ser expandido
       int indexToUpdate = -1;
       for (int i = 0; i < graphValue.vertices.length; i++) {
         if (graphValue.vertices[i].x == currentNode?.coordX &&
@@ -93,26 +101,14 @@ class AStar {
           break;
         }
       }
-
-      print("Foi para " + currentNode.name);
-
       graphValue.vertices[indexToUpdate].color = Colors.red;
-      print("Cor " + currentNode.name);
-
       graph.add(graphValue);
 
+      // Se nó atual for o destino, então busca acaba
       if (currentNode == destination) found = true;
     } while (!found);
 
-    print("----------------------");
-    for (Station station in route) {
-      print(station.name);
-    }
-
-    accumCost.forEach((key, value) {
-      print(key.name + ": " + value.toString());
-    });
-
+    // Descobrindo melhor caminho de forma reversa
     Station? backtrackNode = destination;
     while (backtrackNode != null) {
       print(backtrackNode.name);
@@ -121,6 +117,7 @@ class AStar {
     }
     route = route.reversed.toList();
 
+    // Alterando cor dos nós do melhor caminho
     int indexToUpdateFinal = -1;
     for (int i = 0; i < route.length; i++) {
       for (int j = 0; i < graphValue.vertices.length; j++) {
@@ -132,7 +129,6 @@ class AStar {
       }
       graphValue.vertices[indexToUpdateFinal].color = Colors.green;
     }
-
     graph.add(graphValue);
 
     return route;

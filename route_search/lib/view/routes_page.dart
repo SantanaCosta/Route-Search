@@ -283,7 +283,7 @@ class _RoutesPageState extends State<RoutesPage> {
                   _inicioTextEditingController.text,
                   _destinoTextEditingController.text,
                   weight,
-                  120.0,
+                  35.0,
                   _graph,
                   oldValue);
             },
