@@ -94,11 +94,12 @@ class AStar {
         }
       }
 
+      print("Foi para " + currentNode.name);
+
       graphValue.vertices[indexToUpdate].color = Colors.red;
+      print("Cor " + currentNode.name);
 
       graph.add(graphValue);
-
-      print("Foi para " + currentNode.name);
 
       if (currentNode == destination) found = true;
     } while (!found);
