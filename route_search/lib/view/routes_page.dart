@@ -277,6 +277,7 @@ class _RoutesPageState extends State<RoutesPage> {
                 _linhasSliderValue / 100.0,
                 _tempoSliderValue / 100.0
               ];
+              Navigator.of(context).pop();
               AStar().search(
                   stationCollection,
                   _inicioTextEditingController.text,
@@ -285,8 +286,6 @@ class _RoutesPageState extends State<RoutesPage> {
                   120.0,
                   _graph,
                   oldValue);
-
-              Navigator.of(context).pop();
             },
             child: const Text('OK'),
           ),

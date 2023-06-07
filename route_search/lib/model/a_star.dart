@@ -121,6 +121,20 @@ class AStar {
     }
     route = route.reversed.toList();
 
+    int indexToUpdateFinal = -1;
+    for (int i = 0; i < route.length; i++) {
+      for (int j = 0; i < graphValue.vertices.length; j++) {
+        if (graphValue.vertices[j].x == route[i].coordX &&
+            graphValue.vertices[j].y == route[i].coordY) {
+          indexToUpdateFinal = i;
+          break;
+        }
+      }
+      graphValue.vertices[indexToUpdateFinal].color = Colors.green;
+    }
+
+    graph.add(graphValue);
+
     return route;
   }
 }
