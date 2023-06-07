@@ -15,6 +15,10 @@ class AStar {
       double speed,
       StreamController<Graph> graph,
       Graph graphValue) {
+    // Listas para visualização
+    List<List<Station>> openList = [];
+    List<List<Station>> closedList = [];
+
     List<Station> openNodes = [];
     List<Station> closed = [];
     Map<Station, Station?> previousStation = {};
@@ -47,14 +51,14 @@ class AStar {
 
         if (!closed.contains(nodeConnection)) {
           double distanceToDestination = nodeConnection.distanceTo(destination);
-          double distanceToNextStation = currentNode.distanceTo(nodeConnection);
+          double distanceToConn = currentNode.distanceTo(nodeConnection);
 
           if (currentNode.getConnections[i].type == 1) speed *= 1.5;
-          double travelTime = distanceToNextStation / speed;
+          double travelTime = currentNode.distanceTo(nodeConnection) / speed;
 
           double lineChange = 0.0;
           if (currentNode.line != nodeConnection.line) {
-            lineChange = (distanceToNextStation + travelTime) / 2.0;
+            lineChange = (distanceToConn + travelTime) / 2.0;
           }
 
           // Função de avaliação da conexão i
@@ -73,24 +77,38 @@ class AStar {
           }
 
           // Adicionando conexão i na lista de abertos
-          openNodes.add(nodeConnection);
-          print("Expandiu(" + currentNode.name + "): " + nodeConnection.name);
+          if (!openNodes.contains(nodeConnection)) {
+            openNodes.add(nodeConnection);
+          }
 
           // Ordenando lista de abertos conforme avaliações
           if (openNodes.length > 1) {
             openNodes.sort((a, b) => (accumCost[a]!.compareTo(accumCost[b]!)));
           }
+          openNodes.remove(currentNode);
         }
       }
-      if (!closed.contains(currentNode)) {
-        openNodes.remove(currentNode);
-        closed.add(currentNode);
-      }
+      if (!closed.contains(currentNode)) closed.add(currentNode);
       if (openNodes.isEmpty) return [];
+
+      // Atualizando lista de abertos e fechados para fins de visualização
+      openList.add(openNodes);
+      closedList.add(closed);
+
+      // TEMPORÁRIO
+      print("---FECHADOS ABAIXO---");
+      List<Station> lastElement = closedList.last;
+      for (Station station in lastElement) {
+        print(station.name);
+      }
+      print("---ABERTOS ABAIXO---");
+      lastElement = openList.last;
+      for (Station station in lastElement) {
+        print(station.name);
+      }
 
       // Definindo nó atual como o melhor da lista de abertos
       currentNode = openNodes[0];
-      print("Foi para " + currentNode.name);
 
       // Atualizando cor do nó a ser expandido
       int indexToUpdate = -1;
@@ -109,6 +127,7 @@ class AStar {
     } while (!found);
 
     // Descobrindo melhor caminho de forma reversa
+    print("---CAMINHO FINAL REVERSO---");
     Station? backtrackNode = destination;
     while (backtrackNode != null) {
       print(backtrackNode.name);
