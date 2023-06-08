@@ -13,8 +13,10 @@ class GraphPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     for (final edge in graph.edges) {
-      final start = Offset(edge.start.x, edge.start.y);
-      final end = Offset(edge.end.x, edge.end.y);
+      final start =
+          Offset(edge.start.x + size.width / 2, size.height / 2 - edge.start.y);
+      final end =
+          Offset(edge.end.x + size.width / 2, size.height / 2 - edge.end.y);
 
       canvas.drawLine(
         start,
@@ -26,7 +28,8 @@ class GraphPainter extends CustomPainter {
     }
 
     for (final vertex in graph.vertices) {
-      final center = Offset(vertex.x, vertex.y);
+      final center =
+          Offset(vertex.x + size.width / 2, size.height / 2 - vertex.y);
 
       canvas.drawCircle(
         center,
