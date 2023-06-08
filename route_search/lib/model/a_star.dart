@@ -6,7 +6,7 @@ import 'package:route_search/model/station.dart';
 import 'package:route_search/model/stationcollection.dart';
 
 class AStar {
-  List<Station> search(
+  List search(
       StationCollection stationCollection,
       String originName,
       String destinationName,
@@ -17,6 +17,8 @@ class AStar {
     // Listas para visualização
     List<List<Station>> openList = [];
     List<List<Station>> closedList = [];
+
+    List results = [];
 
     List<Station> openNodes = [];
     List<Station> closed = [];
@@ -151,6 +153,10 @@ class AStar {
     }
     graph.add(graphValue);
 
-    return route;
+    results.add(openList);
+    results.add(closedList);
+    print(closedList[0][0].name);
+
+    return results;
   }
 }

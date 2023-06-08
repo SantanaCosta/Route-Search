@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:route_search/model/a_star.dart';
+import 'package:route_search/view/listas_page.dart';
 
 import '../bloc/monitor.dart';
 import '../model/edge.dart';
@@ -25,7 +26,7 @@ class _RoutesPageState extends State<RoutesPage> {
   double _distanciaSliderValue = 0;
   double _tempoSliderValue = 0;
   double _linhasSliderValue = 0;
-  final StreamController<double> _streamController = StreamController<double>();
+  final StreamController<List> _lists = StreamController<List>();
   final StreamController<Graph> _graph = StreamController<Graph>();
   Graph oldValue = Graph.empty();
 
@@ -68,15 +69,47 @@ class _RoutesPageState extends State<RoutesPage> {
     double alturaTela = MediaQuery.of(context).size.height;
     double larguraTela = MediaQuery.of(context).size.width;
     return Positioned(
-      bottom: alturaTela * 0.1,
-      right: larguraTela * 0.1,
-      child: FloatingActionButton(
-        onPressed: () {
-          _handleBottomSheet(context);
-        },
-        child: const Icon(Icons.route_outlined),
-      ),
-    );
+        bottom: alturaTela * 0.1,
+        right: larguraTela * 0.1,
+        child: StreamBuilder<List>(
+            stream: _lists.stream,
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return Column(
+                  children: [
+                    ElevatedButton(
+                      onPressed: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ListsPage(data: snapshot.data!),
+                        ),
+                      ),
+                      child: const Icon(Icons.format_list_numbered_rounded),
+                      style: ElevatedButton.styleFrom(
+                        shape: const CircleBorder(),
+                      ),
+                    ),
+                    FloatingActionButton(
+                      onPressed: () {
+                        _handleBottomSheet(context);
+                      },
+                      child: const Icon(Icons.route_outlined),
+                    ),
+                  ],
+                );
+              } else {
+                return Column(
+                  children: [
+                    FloatingActionButton(
+                      onPressed: () {
+                        _handleBottomSheet(context);
+                      },
+                      child: const Icon(Icons.route_outlined),
+                    ),
+                  ],
+                );
+              }
+            }));
   }
 
   void _handleBottomSheet(BuildContext context) {
@@ -278,7 +311,7 @@ class _RoutesPageState extends State<RoutesPage> {
                 _tempoSliderValue / 100.0
               ];
               Navigator.of(context).pop();
-              AStar().search(
+              var result = AStar().search(
                   stationCollection,
                   _inicioTextEditingController.text,
                   _destinoTextEditingController.text,
@@ -286,6 +319,7 @@ class _RoutesPageState extends State<RoutesPage> {
                   35.0,
                   _graph,
                   oldValue);
+              _lists.add(result);
             },
             child: const Text('OK'),
           ),
