@@ -116,8 +116,8 @@ class AStar {
       // Atualizando cor do nó a ser expandido
       int indexToUpdate = -1;
       for (int i = 0; i < graphValue.vertices.length; i++) {
-        if (graphValue.vertices[i].x == currentNode?.coordX &&
-            graphValue.vertices[i].y == currentNode?.coordY) {
+        if (graphValue.vertices[i].x == currentNode.coordX &&
+            graphValue.vertices[i].y == currentNode.coordY) {
           indexToUpdate = i;
           break;
         }
@@ -145,7 +145,7 @@ class AStar {
       for (int j = 0; i < graphValue.vertices.length; j++) {
         if (graphValue.vertices[j].x == route[i].coordX &&
             graphValue.vertices[j].y == route[i].coordY) {
-          indexToUpdateFinal = i;
+          indexToUpdateFinal = j;
           break;
         }
       }
