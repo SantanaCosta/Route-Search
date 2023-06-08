@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:route_search/model/graph.dart';
 import 'package:route_search/model/station.dart';
 import 'package:route_search/model/stationcollection.dart';
-import 'package:route_search/model/vertex.dart';
 
 class AStar {
   List<Station> search(
@@ -85,10 +84,12 @@ class AStar {
           if (openNodes.length > 1) {
             openNodes.sort((a, b) => (accumCost[a]!.compareTo(accumCost[b]!)));
           }
-          openNodes.remove(currentNode);
         }
       }
-      if (!closed.contains(currentNode)) closed.add(currentNode);
+      if (!closed.contains(currentNode)) {
+        closed.add(currentNode);
+        openNodes.remove(currentNode);
+      }
       if (openNodes.isEmpty) return [];
 
       // Atualizando lista de abertos e fechados para fins de visualização
