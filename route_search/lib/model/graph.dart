@@ -15,7 +15,7 @@ class Graph {
 
   Graph clearGraph(Graph graph) {
     for (int i = 0; i < graph.vertices.length; i++) {
-      graph.vertices[i].color = Colors.blue;
+      graph.vertices[i].color = Colors.grey;
     }
 
     return graph;

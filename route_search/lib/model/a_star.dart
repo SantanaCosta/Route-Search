@@ -143,7 +143,7 @@ class AStar {
 
       int indexToUpdate = graphValue.getIndexByLabel(route[i].name);
 
-      if (i == 0 || route[i] == destination) color = Colors.amber;
+      if (i == 0 || route[i] == destination) color = Colors.lightGreen[900]!;
 
       Future.delayed(Duration(seconds: ++duration), () {
         graphValue.vertices[indexToUpdate].color = color;
