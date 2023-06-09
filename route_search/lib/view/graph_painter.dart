@@ -5,10 +5,9 @@ import '../model/graph.dart';
 class GraphPainter extends CustomPainter {
   final Graph graph;
   final double vertexRadius;
-  final Color edgeColor;
   final double edgeWidth;
 
-  GraphPainter(this.graph, this.vertexRadius, this.edgeColor, this.edgeWidth);
+  GraphPainter(this.graph, this.vertexRadius, this.edgeWidth);
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -19,12 +18,20 @@ class GraphPainter extends CustomPainter {
           Offset(edge.end.x + size.width / 2, size.height / 2 - edge.end.y);
 
       canvas.drawLine(
-        start,
-        end,
-        Paint()
-          ..color = edgeColor
-          ..strokeWidth = edgeWidth,
-      );
+          start,
+          end,
+          Paint()
+            ..color = edge.color
+            ..strokeWidth = edgeWidth);
+
+      if (edge.type == 0) {
+        canvas.drawLine(
+            start,
+            end,
+            Paint()
+              ..color = Colors.white
+              ..strokeWidth = edgeWidth / 3.0);
+      }
     }
 
     for (final vertex in graph.vertices) {
