@@ -6,14 +6,14 @@ import 'package:route_search/model/station.dart';
 import 'package:route_search/model/stationcollection.dart';
 
 class AStar {
-  List search(
+  Future<List> search(
       StationCollection stationCollection,
       String originName,
       String destinationName,
       List<double> weigth,
       double speed,
       StreamController<Graph> graph,
-      Graph graphValue) {
+      Graph graphValue) async {
     // Listas para visualização
     List<List<Station>> openList = [];
     List<List<Station>> closedList = [];
@@ -28,10 +28,12 @@ class AStar {
 
     Station? currentNode = stationCollection.getStationByName(originName);
     Station? destination = stationCollection.getStationByName(destinationName);
-
-    graph.add(graphValue.clearGraph(graphValue));
-
     if (currentNode == null || destination == null) return route;
+
+    int duration = 1;
+
+    // Limpando Grafo
+    graph.add(graphValue.clearGraph(graphValue));
 
     // Ajustando pesos
     double totalWeigth = weigth[0] + weigth[1] + weigth[2];
@@ -47,6 +49,11 @@ class AStar {
     closed.add(currentNode);
     previousStation[currentNode] = null;
     accumCost[currentNode] = 0;
+
+    // Pintando o primeiro nó
+    graphValue.vertices[0].color = Colors.red;
+    graph.add(graphValue);
+
     do {
       // Descobrindo conexões do nó atual
       for (int i = 0; i < currentNode!.getConnections.length; i++) {
@@ -101,18 +108,6 @@ class AStar {
       openList.add(openNodes.toList());
       closedList.add(closed.toList());
 
-      // TEMPORÁRIO
-      print("---FECHADOS ABAIXO---");
-      List<Station> lastElement = closedList.last;
-      for (Station station in lastElement) {
-        print(station.name);
-      }
-      print("---ABERTOS ABAIXO---");
-      lastElement = openList.last;
-      for (Station station in lastElement) {
-        print(station.name);
-      }
-
       // Definindo nó atual como o melhor da lista de abertos
       currentNode = openNodes[0];
 
@@ -125,8 +120,10 @@ class AStar {
           break;
         }
       }
-
-      graphValue.vertices[indexToUpdate].color = Colors.red;
+      Future.delayed(Duration(seconds: ++duration), () {
+        graphValue.vertices[indexToUpdate].color = Colors.red;
+        graph.add(graphValue);
+      });
 
       // Se nó atual for o destino, então busca acaba
       if (currentNode == destination) {
@@ -139,29 +136,28 @@ class AStar {
     } while (!found);
 
     // Descobrindo melhor caminho de forma reversa
-    print("---CAMINHO FINAL REVERSO---");
     Station? backtrackNode = destination;
     while (backtrackNode != null) {
-      print(backtrackNode.name);
       route.add(backtrackNode);
       backtrackNode = previousStation[backtrackNode];
     }
     route = route.reversed.toList();
 
     // Alterando cor dos nós do melhor caminho
-    int indexToUpdateFinal = -1;
     for (int i = 0; i < route.length; i++) {
+      int index = -1;
       for (int j = 0; i < graphValue.vertices.length; j++) {
         if (graphValue.vertices[j].x == route[i].coordX &&
             graphValue.vertices[j].y == route[i].coordY) {
-          indexToUpdateFinal = j;
+          index = j;
           break;
         }
       }
-      graphValue.vertices[indexToUpdateFinal].color = Colors.green;
+      Future.delayed(Duration(seconds: ++duration), () {
+        graphValue.vertices[index].color = Colors.green;
+        graph.add(graphValue);
+      });
     }
-
-    graph.add(graphValue);
 
     results.add(openList);
     results.add(closedList);

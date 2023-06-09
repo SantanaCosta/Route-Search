@@ -304,14 +304,14 @@ class _RoutesPageState extends State<RoutesPage> {
           ElevatedButton(
             style: ElevatedButton.styleFrom(
                 textStyle: const TextStyle(fontSize: 20)),
-            onPressed: () {
+            onPressed: () async {
               List<double> weight = [
                 _distanciaSliderValue / 100.0,
                 _linhasSliderValue / 100.0,
                 _tempoSliderValue / 100.0
               ];
               Navigator.of(context).pop();
-              var result = AStar().search(
+              var result = await AStar().search(
                   stationCollection,
                   _inicioTextEditingController.text,
                   _destinoTextEditingController.text,
