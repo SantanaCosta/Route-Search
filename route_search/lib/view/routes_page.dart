@@ -333,7 +333,8 @@ class _RoutesPageState extends State<RoutesPage> {
 
     for (int i = 0; i < stationCollection.length(); i++) {
       Station station = stationCollection.stationList[i];
-      Vertex stationVertex = Vertex(x: station.coordX, y: station.coordY);
+      Vertex stationVertex =
+          Vertex(label: station.name, x: station.coordX, y: station.coordY);
 
       graph.vertices.add(stationVertex);
 
@@ -344,7 +345,9 @@ class _RoutesPageState extends State<RoutesPage> {
         graph.edges.add(Edge(
             start: stationVertex,
             end: Vertex(
-                x: connectedStation.coordX, y: connectedStation.coordY)));
+                label: connectedStation.name,
+                x: connectedStation.coordX,
+                y: connectedStation.coordY)));
       }
     }
 

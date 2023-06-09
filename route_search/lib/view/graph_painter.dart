@@ -38,6 +38,25 @@ class GraphPainter extends CustomPainter {
           ..color = vertex.color
           ..strokeWidth = 1.0,
       );
+
+      TextPainter textPainter = TextPainter(
+        text: TextSpan(
+          text: vertex.label,
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 12,
+          ),
+        ),
+        textAlign: TextAlign.center,
+        textDirection: TextDirection.ltr,
+      );
+
+      textPainter.layout();
+
+      textPainter.paint(
+        canvas,
+        center - Offset(textPainter.width / 2, textPainter.height / 2),
+      );
     }
   }
 
