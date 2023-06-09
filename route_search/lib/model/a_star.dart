@@ -93,8 +93,8 @@ class AStar {
       if (openNodes.isEmpty) return [];
 
       // Atualizando lista de abertos e fechados para fins de visualização
-      openList.add(openNodes);
-      closedList.add(closed);
+      openList.add(openNodes.toList());
+      closedList.add(closed.toList());
 
       // TEMPORÁRIO
       print("---FECHADOS ABAIXO---");
@@ -124,7 +124,13 @@ class AStar {
       graph.add(graphValue);
 
       // Se nó atual for o destino, então busca acaba
-      if (currentNode == destination) found = true;
+      if (currentNode == destination) {
+        found = true;
+        closed.add(currentNode);
+        openNodes.remove(currentNode);
+        openList.add(openNodes.toList());
+        closedList.add(closed.toList());
+      }
     } while (!found);
 
     // Descobrindo melhor caminho de forma reversa
