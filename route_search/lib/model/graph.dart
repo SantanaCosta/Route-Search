@@ -20,4 +20,14 @@ class Graph {
 
     return graph;
   }
+
+  int getIndexByLabel(String label) {
+    for (int i = 0; i < vertices.length; i++) {
+      if (vertices[i].label == label) {
+        return i;
+      }
+    }
+
+    return -1;
+  }
 }

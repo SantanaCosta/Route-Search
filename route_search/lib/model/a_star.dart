@@ -51,7 +51,8 @@ class AStar {
     accumCost[currentNode] = 0;
 
     // Pintando o primeiro nó
-    graphValue.vertices[0].color = Colors.red;
+    graphValue.vertices[graphValue.getIndexByLabel(currentNode.name)].color =
+        Colors.red;
     graph.add(graphValue);
 
     do {
@@ -112,14 +113,7 @@ class AStar {
       currentNode = openNodes[0];
 
       // Atualizando cor do nó a ser expandido
-      int indexToUpdate = -1;
-      for (int i = 0; i < graphValue.vertices.length; i++) {
-        if (graphValue.vertices[i].x == currentNode.coordX &&
-            graphValue.vertices[i].y == currentNode.coordY) {
-          indexToUpdate = i;
-          break;
-        }
-      }
+      int indexToUpdate = graphValue.getIndexByLabel(currentNode.name);
       Future.delayed(Duration(seconds: ++duration), () {
         graphValue.vertices[indexToUpdate].color = Colors.red;
         graph.add(graphValue);
@@ -145,16 +139,14 @@ class AStar {
 
     // Alterando cor dos nós do melhor caminho
     for (int i = 0; i < route.length; i++) {
-      int index = -1;
-      for (int j = 0; i < graphValue.vertices.length; j++) {
-        if (graphValue.vertices[j].x == route[i].coordX &&
-            graphValue.vertices[j].y == route[i].coordY) {
-          index = j;
-          break;
-        }
-      }
+      Color color = Colors.green;
+
+      int indexToUpdate = graphValue.getIndexByLabel(route[i].name);
+
+      if (i == 0 || route[i] == destination) color = Colors.amber;
+
       Future.delayed(Duration(seconds: ++duration), () {
-        graphValue.vertices[index].color = Colors.green;
+        graphValue.vertices[indexToUpdate].color = color;
         graph.add(graphValue);
       });
     }
