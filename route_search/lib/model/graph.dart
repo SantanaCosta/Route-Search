@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 import 'edge.dart';
 import 'vertex.dart';
 
@@ -10,4 +12,12 @@ class Graph {
   Graph.empty()
       : vertices = [],
         edges = [];
+
+  Graph clearGraph(Graph graph) {
+    for (int i = 0; i < graph.vertices.length; i++) {
+      graph.vertices[i].color = Colors.blue;
+    }
+
+    return graph;
+  }
 }

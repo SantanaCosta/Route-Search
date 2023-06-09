@@ -28,6 +28,9 @@ class AStar {
 
     Station? currentNode = stationCollection.getStationByName(originName);
     Station? destination = stationCollection.getStationByName(destinationName);
+
+    graph.add(graphValue.clearGraph(graphValue));
+
     if (currentNode == null || destination == null) return route;
 
     // Ajustando pesos
@@ -122,8 +125,8 @@ class AStar {
           break;
         }
       }
+
       graphValue.vertices[indexToUpdate].color = Colors.red;
-      graph.add(graphValue);
 
       // Se nó atual for o destino, então busca acaba
       if (currentNode == destination) {
@@ -157,11 +160,11 @@ class AStar {
       }
       graphValue.vertices[indexToUpdateFinal].color = Colors.green;
     }
+
     graph.add(graphValue);
 
     results.add(openList);
     results.add(closedList);
-    print(closedList[0][0].name);
 
     return results;
   }
