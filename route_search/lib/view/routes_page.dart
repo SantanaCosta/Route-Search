@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:route_search/model/a_star.dart';
-import 'package:route_search/view/listas_page.dart';
+import 'package:route_search/view/lists_page.dart';
 
 import '../bloc/monitor.dart';
 import '../model/edge.dart';
