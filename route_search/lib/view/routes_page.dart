@@ -118,38 +118,74 @@ class _RoutesPageState extends State<RoutesPage> {
               enableDrag: false,
               onClosing: () {},
               builder: (BuildContext context) {
-                return Column(
-                  children: [
-                    _handleTextFields(),
-                    _handleSliders(),
-                    _handleButtons(context)
-                  ],
+                return Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    children: [
+                      _handleTextFields(),
+                      const SizedBox(height: 16.0),
+                      _handleSliders(),
+                      const SizedBox(height: 16.0),
+                      _handleButtons(context)
+                    ],
+                  ),
                 );
               });
         });
   }
 
   Widget _handleTextFields() {
-    return Column(
+    return Row(
       children: [
-        Padding(
-          padding: EdgeInsets.all(2.0),
-          child: TextField(
-            controller: _inicioTextEditingController,
-            decoration: const InputDecoration(
-              border: OutlineInputBorder(),
-              labelText: 'Inicio',
+        Column(
+          children: const [
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: CircleAvatar(
+                backgroundColor: Colors.blue,
+                radius: 8.0,
+                child: Icon(Icons.circle, color: Colors.white, size: 8.0),
+                foregroundColor: Colors.blue,
+              ),
             ),
-          ),
+            SizedBox(height: 4.0),
+            Align(
+              alignment: Alignment.center,
+              child: Text("I",
+                  style: TextStyle(
+                      color: Colors.grey, fontSize: 24.0, fontFamily: "Arial")),
+            ),
+            SizedBox(height: 4.0),
+            Align(
+              alignment: Alignment.topCenter,
+              child: Icon(Icons.location_on, color: Colors.blue),
+            ),
+          ],
         ),
-        Padding(
-          padding: EdgeInsets.all(2.0),
-          child: TextField(
-            controller: _destinoTextEditingController,
-            decoration: const InputDecoration(
-              border: OutlineInputBorder(),
-              labelText: 'Destino',
-            ),
+        Expanded(
+          child: Column(
+            children: [
+              Padding(
+                padding: EdgeInsets.all(2.0),
+                child: TextField(
+                  controller: _inicioTextEditingController,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'Inicio',
+                  ),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.all(2.0),
+                child: TextField(
+                  controller: _destinoTextEditingController,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'Destino',
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ],
@@ -162,7 +198,6 @@ class _RoutesPageState extends State<RoutesPage> {
     final _trocasLinhasValueNotifier =
         ValueNotifier<double>(_linhasSliderValue);
     final _tempoValueNotifier = ValueNotifier<double>(_tempoSliderValue);
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -170,6 +205,7 @@ class _RoutesPageState extends State<RoutesPage> {
           "Níveis de prioridade",
           style: TextStyle(fontSize: 20),
         ),
+        const SizedBox(height: 8.0),
         const Text(
           "Menor Distância",
           style: TextStyle(fontSize: 14),
@@ -207,6 +243,7 @@ class _RoutesPageState extends State<RoutesPage> {
             )
           ],
         ),
+        const SizedBox(height: 8.0),
         const Text(
           "Poucas trocas de linha",
           style: TextStyle(fontSize: 14),
@@ -244,6 +281,7 @@ class _RoutesPageState extends State<RoutesPage> {
             )
           ],
         ),
+        const SizedBox(height: 8.0),
         const Text(
           "Menor tempo",
           style: TextStyle(fontSize: 14),
@@ -291,15 +329,15 @@ class _RoutesPageState extends State<RoutesPage> {
       return Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-                textStyle: const TextStyle(fontSize: 20)),
+          TextButton(
+            style:
+                TextButton.styleFrom(textStyle: const TextStyle(fontSize: 20)),
             onPressed: () {
               Navigator.of(context).pop();
             },
             child: const Text('Cancelar'),
           ),
-          ElevatedButton(
+          ElevatedButton.icon(
             style: ElevatedButton.styleFrom(
                 textStyle: const TextStyle(fontSize: 20)),
             onPressed: () async {
@@ -319,7 +357,8 @@ class _RoutesPageState extends State<RoutesPage> {
                   oldValue);
               _lists.add(result);
             },
-            child: const Text('OK'),
+            icon: const Icon(Icons.check),
+            label: const Text('Confirmar'),
           ),
         ],
       );
