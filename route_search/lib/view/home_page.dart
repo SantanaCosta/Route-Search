@@ -31,9 +31,6 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text(widget.title),
-        ),
         body: _children[_currentIndex],
         bottomNavigationBar: BottomNavigationBar(
           onTap: onTabTapped,
@@ -41,15 +38,15 @@ class _MyHomePageState extends State<MyHomePage> {
           items: const [
             BottomNavigationBarItem(
               icon: Icon(Icons.home),
-              label: 'Initial',
+              label: 'Início',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.map_outlined),
-              label: 'Routes',
+              label: 'Rotas',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.train),
-              label: 'Stations',
+              label: 'Estações',
             ),
           ],
         ));

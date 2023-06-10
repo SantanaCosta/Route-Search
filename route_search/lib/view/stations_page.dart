@@ -18,10 +18,20 @@ class StationsPage extends StatefulWidget {
 class _StationsPageState extends State<StationsPage> {
   @override
   Widget build(BuildContext context) {
-    return Stack(children: [
-      _handleListView(context),
-      _handleFloatingActionButton(context)
-    ]);
+    return Scaffold(
+        appBar: AppBar(
+          title: const Text(
+            "Estações",
+            style: TextStyle(
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          centerTitle: true,
+        ),
+        body: Stack(children: [
+          _handleListView(context),
+          _handleFloatingActionButton(context)
+        ]));
   }
 
   Widget _handleListView(BuildContext context) {
@@ -87,7 +97,6 @@ class _StationsPageState extends State<StationsPage> {
         bottom: alturaTela * 0.1,
         right: larguraTela * 0.1,
         child: FloatingActionButton(
-          backgroundColor: Colors.blue,
           onPressed: () {
             BlocProvider.of<ManageBloc>(context).add(InsertEvent());
             Navigator.pushNamed(context, '/registro');

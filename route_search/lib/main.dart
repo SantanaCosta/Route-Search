@@ -30,9 +30,12 @@ class MyApp extends StatelessWidget {
         child: BlocListener<ManageBloc, ManageState>(
           listener: (context, state) {},
           child: MaterialApp(
-            title: 'Flutter Demo',
+            title: 'Route Search',
             theme: ThemeData(
-              primarySwatch: Colors.blue,
+              colorScheme: ColorScheme.fromSwatch().copyWith(
+                primary: Colors.indigoAccent,
+                secondary: Colors.indigoAccent,
+              ),
             ),
             home: const MyHomePage(title: 'Route Search'),
             initialRoute: '/',

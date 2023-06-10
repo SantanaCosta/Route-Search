@@ -20,7 +20,13 @@ class _StationRegisterPageState extends State<StationRegisterPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Registro'),
+          title: const Text(
+            "Registros",
+            style: TextStyle(
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          centerTitle: true,
         ),
         body: Padding(
           padding: const EdgeInsets.all(16.0),

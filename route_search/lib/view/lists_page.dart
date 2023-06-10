@@ -14,7 +14,13 @@ class _ListsPageState extends State<ListsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Lista de Abertos e Fechados'),
+        title: const Text(
+          "Listas de abertos e fechados",
+          style: TextStyle(
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        centerTitle: true,
       ),
       body: SingleChildScrollView(
         child: Padding(

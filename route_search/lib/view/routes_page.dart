@@ -34,9 +34,22 @@ class _RoutesPageState extends State<RoutesPage> {
   Widget build(BuildContext context) {
     _graph.add(Graph.empty());
 
-    return Stack(
-      children: [_handleGraphWidget(), _handleFloatingActionButton(context)],
-    );
+    return Scaffold(
+        appBar: AppBar(
+          title: const Text(
+            "Rotas",
+            style: TextStyle(
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          centerTitle: true,
+        ),
+        body: Stack(
+          children: [
+            _handleGraphWidget(),
+            _handleFloatingActionButton(context)
+          ],
+        ));
   }
 
   Widget _handleGraphWidget() {
@@ -82,10 +95,10 @@ class _RoutesPageState extends State<RoutesPage> {
                           builder: (context) => ListsPage(data: snapshot.data!),
                         ),
                       ),
-                      child: const Icon(Icons.format_list_numbered_rounded),
                       style: ElevatedButton.styleFrom(
                         shape: const CircleBorder(),
                       ),
+                      child: const Icon(Icons.format_list_numbered_rounded),
                     ),
                     FloatingActionButton(
                       onPressed: () {
@@ -142,23 +155,22 @@ class _RoutesPageState extends State<RoutesPage> {
             Align(
               alignment: Alignment.bottomCenter,
               child: CircleAvatar(
-                backgroundColor: Colors.blue,
                 radius: 8.0,
+                backgroundColor: Colors.indigoAccent,
                 child: Icon(Icons.circle, color: Colors.white, size: 8.0),
-                foregroundColor: Colors.blue,
               ),
             ),
             SizedBox(height: 4.0),
             Align(
               alignment: Alignment.center,
-              child: Text("I",
+              child: Text("¦",
                   style: TextStyle(
                       color: Colors.grey, fontSize: 24.0, fontFamily: "Arial")),
             ),
             SizedBox(height: 4.0),
             Align(
               alignment: Alignment.topCenter,
-              child: Icon(Icons.location_on, color: Colors.blue),
+              child: Icon(Icons.location_on, color: Colors.indigoAccent),
             ),
           ],
         ),
@@ -166,7 +178,7 @@ class _RoutesPageState extends State<RoutesPage> {
           child: Column(
             children: [
               Padding(
-                padding: EdgeInsets.all(2.0),
+                padding: const EdgeInsets.all(2.0),
                 child: TextField(
                   controller: _inicioTextEditingController,
                   decoration: const InputDecoration(
@@ -176,7 +188,7 @@ class _RoutesPageState extends State<RoutesPage> {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.all(2.0),
+                padding: const EdgeInsets.all(2.0),
                 child: TextField(
                   controller: _destinoTextEditingController,
                   decoration: const InputDecoration(
