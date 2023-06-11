@@ -19,7 +19,28 @@ class InitialPage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Container(
-                  height: MediaQuery.of(context).size.height * 0.70,
+                  height: MediaQuery.of(context).size.height * 0.65,
+                  alignment: Alignment.bottomCenter,
+                  child: Text(
+                    "Route Search",
+                    style: TextStyle(
+                      fontSize: 26,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: "Roboto",
+                      color: Colors.white,
+                      shadows: [
+                        Shadow(
+                          color: Colors.black.withOpacity(0.25),
+                          offset: const Offset(1.0, 1.0),
+                          blurRadius: 4.0,
+                        ),
+                      ],
+                    ),
+                  )),
+              const SizedBox(
+                height: 20,
+              ),
+              Container(
                   alignment: Alignment.bottomCenter,
                   child: Text(
                     "Um app para testar buscas customizáveis com o algoritmo A*. Adicione estações, selecione as preferências de heurísticas e veja os caminhos serem trilhados!",
@@ -28,7 +49,7 @@ class InitialPage extends StatelessWidget {
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                       fontFamily: "Roboto",
-                      color: Colors.black,
+                      color: Colors.white,
                       shadows: [
                         Shadow(
                           color: Colors.black.withOpacity(0.25),

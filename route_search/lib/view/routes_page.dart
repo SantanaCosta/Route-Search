@@ -136,9 +136,9 @@ class _RoutesPageState extends State<RoutesPage> {
                   child: Column(
                     children: [
                       _handleTextFields(),
-                      const SizedBox(height: 16.0),
+                      const SizedBox(height: 12.0),
                       _handleSliders(),
-                      const SizedBox(height: 16.0),
+                      const SizedBox(height: 12.0),
                       _handleButtons(context)
                     ],
                   ),
@@ -182,6 +182,8 @@ class _RoutesPageState extends State<RoutesPage> {
                 child: TextField(
                   controller: _inicioTextEditingController,
                   decoration: const InputDecoration(
+                    contentPadding:
+                        EdgeInsets.symmetric(vertical: 10, horizontal: 20),
                     border: OutlineInputBorder(),
                     labelText: 'Inicio',
                   ),
@@ -192,6 +194,8 @@ class _RoutesPageState extends State<RoutesPage> {
                 child: TextField(
                   controller: _destinoTextEditingController,
                   decoration: const InputDecoration(
+                    contentPadding:
+                        EdgeInsets.symmetric(vertical: 10, horizontal: 20),
                     border: OutlineInputBorder(),
                     labelText: 'Destino',
                   ),
