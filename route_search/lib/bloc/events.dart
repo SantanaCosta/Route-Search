@@ -1,10 +1,14 @@
+import 'dart:async';
+
 import '../model/station.dart';
 
 abstract class ManageEvent {}
 
 class SubmitEvent extends ManageEvent {
   Station station;
-  SubmitEvent({required this.station});
+  String? stationId;
+  Completer? completer;
+  SubmitEvent({required this.station, this.stationId, this.completer});
 }
 
 class DeleteEvent extends ManageEvent {

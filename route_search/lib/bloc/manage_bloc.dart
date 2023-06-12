@@ -31,9 +31,12 @@ class ManageBloc extends Bloc<ManageEvent, ManageState> {
     RestDataProvider.helper.deleteStation(event.stationId);
   }
 
-  submitEvent(SubmitEvent event, Emitter emit) {
+  submitEvent(SubmitEvent event, Emitter emit) async {
     if (state is InsertState) {
-      RestDataProvider.helper.createStation(event.station);
+      event.stationId =
+          await RestDataProvider.helper.createStation(event.station);
+      event.completer?.complete();
+      print("No manageBloc: " + event.stationId!);
     } else if (state is UpdateState) {
       RestDataProvider.helper.updateStation(
         (state as UpdateState).stationId,

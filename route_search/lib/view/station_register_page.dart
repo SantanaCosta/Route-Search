@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../bloc/events.dart';
@@ -80,7 +82,7 @@ class _StationRegisterPageState extends State<StationRegisterPage> {
                       labelText: 'X',
                     )),
               ),
-              SizedBox(height: 70, width: 10),
+              const SizedBox(height: 70, width: 10),
               SizedBox(
                 width: 75,
                 child: TextFormField(
@@ -95,7 +97,7 @@ class _StationRegisterPageState extends State<StationRegisterPage> {
                       labelText: 'Y',
                     )),
               ),
-              SizedBox(height: 70, width: 10),
+              const SizedBox(height: 70, width: 10),
               SizedBox(
                 width: 85,
                 child: TextFormField(
@@ -168,7 +170,7 @@ class _StationRegisterPageState extends State<StationRegisterPage> {
   List<Connection> _setConnections(StationCollection stationCollection) {
     List<Connection> connections = [];
 
-    for (int i = 0; i < stationCollection.length(); i++) {
+    for (int i = 0; i < colours.length; i++) {
       if (colours[i][0] == Colors.grey) {
         int type = 0;
         if (colours[i][1] == Colors.grey) type = 1;
@@ -230,16 +232,20 @@ class _StationRegisterPageState extends State<StationRegisterPage> {
             child: SizedBox(
               width: MediaQuery.of(context).size.width * 0.8,
               child: ElevatedButton(
-                onPressed: () {
+                onPressed: () async {
                   if (manageState is UpdateState) {
-                    if (nameValue == "")
+                    if (nameValue == "") {
                       nameValue = manageState.previousStation.name;
-                    if (xValue == "")
+                    }
+                    if (xValue == "") {
                       xValue = manageState.previousStation.coordX.toString();
-                    if (yValue == "")
+                    }
+                    if (yValue == "") {
                       yValue = manageState.previousStation.coordY.toString();
-                    if (lineValue == "")
+                    }
+                    if (lineValue == "") {
                       lineValue = manageState.previousStation.line.toString();
+                    }
                   } else {
                     if (nameValue == "") nameValue = "Unknown";
                     if (xValue == "") xValue = "0";
@@ -254,12 +260,16 @@ class _StationRegisterPageState extends State<StationRegisterPage> {
                     line: int.parse(lineValue),
                     connections: connections,
                   );
+                  Completer completer = Completer();
+
+                  SubmitEvent submitEvent =
+                      SubmitEvent(station: station, completer: completer);
+
                   BlocProvider.of<ManageBloc>(context).add(
-                    SubmitEvent(station: station),
+                    submitEvent,
                   );
 
-                  // Era para atualizar o monitorState.stationCollection
-                  BlocProvider.of<MonitorBloc>(context).add(UpdateList());
+                  await submitEvent.completer?.future;
 
                   for (int i = 0; i < updatedStations.length; i++) {
                     if (updatedStations[i] != -2) {
@@ -271,9 +281,7 @@ class _StationRegisterPageState extends State<StationRegisterPage> {
                       Station changedStation = stColl.getStationAtIndex(i);
 
                       changedStation.updateConnById(
-                          monitorState.stationCollection
-                              .getStationIdByName(nameValue),
-                          updatedStations[i]);
+                          submitEvent.stationId!, updatedStations[i]);
 
                       BlocProvider.of<ManageBloc>(context).add(
                         SubmitEvent(station: changedStation),
@@ -281,11 +289,12 @@ class _StationRegisterPageState extends State<StationRegisterPage> {
                     }
                   }
 
+                  updatedList = true;
                   Navigator.pop(context);
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.green,
-                  minimumSize: Size(0, 50),
+                  minimumSize: const Size(0, 50),
                 ),
                 child: const Text('SALVAR'),
               ),
@@ -326,6 +335,7 @@ class _StationRegisterPageState extends State<StationRegisterPage> {
 
   List<int> updatedStations = [];
   StationCollection stColl = StationCollection();
+  bool updatedList = false;
 
   Widget _handleConnectionsList(BuildContext context) {
     return BlocBuilder<MonitorBloc, MonitorState>(builder: (context, state) {
@@ -361,9 +371,12 @@ class _StationRegisterPageState extends State<StationRegisterPage> {
       connections = _setConnections(stationCollection);
       stColl = stationCollection;
 
+      int itemCount = stationCollection.length();
+      if (updatedList) return const SizedBox();
+
       return Expanded(
         child: ListView.builder(
-          itemCount: stationCollection.length(),
+          itemCount: itemCount,
           itemBuilder: (context, index) {
             return ListTile(
                 title: Text(stationCollection.getStationAtIndex(index).name),

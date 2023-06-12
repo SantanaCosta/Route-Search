@@ -28,11 +28,18 @@ class RestDataProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> createStation(Station station) async {
+  Future<String> createStation(Station station) async {
     try {
-      await _dio.post('$baseUrl' + ".json", data: {'fields': station.toMap()});
+      // fazer uma requisição post para o banco de dados e obter a resposta
+      var response = await _dio
+          .post('$baseUrl' + ".json", data: {'fields': station.toMap()});
+      // obter o id gerado
+      String id = response.data['name'];
+      // retornar o id
+      return id;
     } catch (error) {
       print(error);
+      return "";
     }
   }
 
