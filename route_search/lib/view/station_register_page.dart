@@ -269,7 +269,16 @@ class _StationRegisterPageState extends State<StationRegisterPage> {
                     submitEvent,
                   );
 
-                  await submitEvent.completer?.future;
+                  String stationId;
+                  if (manageState is UpdateState) {
+                    stationId = monitorState.stationCollection
+                        .getStationIdByName(nameValue);
+                  } else {
+                    await submitEvent.completer?.future;
+                    stationId = submitEvent.stationId!;
+                  }
+
+                  if (!mounted) return;
 
                   for (int i = 0; i < updatedStations.length; i++) {
                     if (updatedStations[i] != -2) {
@@ -281,7 +290,7 @@ class _StationRegisterPageState extends State<StationRegisterPage> {
                       Station changedStation = stColl.getStationAtIndex(i);
 
                       changedStation.updateConnById(
-                          submitEvent.stationId!, updatedStations[i]);
+                          stationId, updatedStations[i]);
 
                       BlocProvider.of<ManageBloc>(context).add(
                         SubmitEvent(station: changedStation),
@@ -371,12 +380,11 @@ class _StationRegisterPageState extends State<StationRegisterPage> {
       connections = _setConnections(stationCollection);
       stColl = stationCollection;
 
-      int itemCount = stationCollection.length();
       if (updatedList) return const SizedBox();
 
       return Expanded(
         child: ListView.builder(
-          itemCount: itemCount,
+          itemCount: stationCollection.length(),
           itemBuilder: (context, index) {
             return ListTile(
                 title: Text(stationCollection.getStationAtIndex(index).name),

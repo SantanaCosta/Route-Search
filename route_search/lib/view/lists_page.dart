@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class ListsPage extends StatefulWidget {
   final List data;
 
-  ListsPage({Key? key, required this.data}) : super(key: key);
+  const ListsPage({Key? key, required this.data}) : super(key: key);
 
   @override
   State<ListsPage> createState() => _ListsPageState();
@@ -27,16 +27,17 @@ class _ListsPageState extends State<ListsPage> {
           padding: const EdgeInsets.all(16.0),
           child: Column(
             children: [
-              Row(
-                children: [
-                  Expanded(
-                    child: _buildList('Lista de Abertos', widget.data[0]),
-                  ),
-                  SizedBox(height: 16),
-                  Expanded(
-                      child: _buildList('Lista de Fechados', widget.data[1])),
-                ],
-              ),
+              if (widget.data.isNotEmpty)
+                Row(
+                  children: [
+                    Expanded(
+                      child: _buildList('Lista de Abertos', widget.data[0]),
+                    ),
+                    const SizedBox(height: 16),
+                    Expanded(
+                        child: _buildList('Lista de Fechados', widget.data[1])),
+                  ],
+                ),
             ],
           ),
         ),
@@ -55,10 +56,10 @@ class _ListsPageState extends State<ListsPage> {
             fontSize: 18,
           ),
         ),
-        SizedBox(height: 8),
+        const SizedBox(height: 8),
         GridView.count(
           shrinkWrap: true,
-          physics: NeverScrollableScrollPhysics(),
+          physics: const NeverScrollableScrollPhysics(),
           crossAxisCount: 1,
           children: List.generate(items.length, (index) {
             return Column(

@@ -36,12 +36,12 @@ class ManageBloc extends Bloc<ManageEvent, ManageState> {
       event.stationId =
           await RestDataProvider.helper.createStation(event.station);
       event.completer?.complete();
-      print("No manageBloc: " + event.stationId!);
     } else if (state is UpdateState) {
       RestDataProvider.helper.updateStation(
         (state as UpdateState).stationId,
         event.station,
       );
+      event.completer?.complete();
       emit(InsertState());
     }
   }
