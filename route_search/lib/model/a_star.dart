@@ -68,13 +68,26 @@ class AStar {
           double travelTimeToDestination = distanceToDestination / speed;
           double travelTimeToConn = distanceToConn / speed;
 
-          double costToConn = distanceToConn + travelTimeToConn;
+          double costToConn =
+              (weigth[0] * distanceToConn) + (weigth[1] * travelTimeToConn);
+
+          print(currentNode.name +
+              " to " +
+              nodeConnection.name +
+              ": " +
+              distanceToConn.toString());
 
           // Função de avaliação da conexão i
           double evaluation = accumCost[currentNode]! +
               costToConn +
               (weigth[0] * distanceToDestination) +
               (weigth[1] * travelTimeToDestination);
+
+          print("f(" +
+              nodeConnection.name +
+              ") = " +
+              evaluation.toString() +
+              "\n");
 
           // Armazenando avaliação da conexão i
           accumCost[nodeConnection] = accumCost[currentNode]! + costToConn;
