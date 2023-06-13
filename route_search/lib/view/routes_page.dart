@@ -359,6 +359,7 @@ class _RoutesPageState extends State<RoutesPage> {
             onPressed: () async {
               List<double> weight = [
                 _distanciaSliderValue / 100.0,
+                _linhasSliderValue / 100.0,
                 _tempoSliderValue / 100.0
               ];
               Navigator.of(context).pop();
