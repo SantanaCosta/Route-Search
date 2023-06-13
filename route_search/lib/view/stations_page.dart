@@ -5,6 +5,7 @@ import 'package:route_search/model/stationcollection.dart';
 
 import '../bloc/events.dart';
 import '../bloc/manage_bloc.dart';
+import '../controller/navigation_controler.dart';
 import '../model/connection.dart';
 import '../model/station.dart';
 
@@ -16,6 +17,22 @@ class StationsPage extends StatefulWidget {
 }
 
 class _StationsPageState extends State<StationsPage> {
+  late NavigationController _navigationController;
+
+  @override
+  void initState() {
+    super.initState();
+    _navigationController = NavigationController();
+    _navigationController.setup(
+      initialIndex: 0,
+      onPageChanged: (index) {
+        setState(() {
+          // Atualize o estado do widget pai conforme necessário
+        });
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -81,6 +98,8 @@ class _StationsPageState extends State<StationsPage> {
                     ));
                     stationCollection.deleteStationOfId(
                         stationCollection.getIdAtIndex(index));
+
+                    _navigationController.navigateToPage(1);
                   },
                   icon: const Icon(Icons.delete),
                 ),

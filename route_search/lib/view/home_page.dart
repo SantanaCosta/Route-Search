@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:route_search/view/routes_page.dart';
 import 'package:route_search/view/stations_page.dart';
 
+import '../controller/navigation_controler.dart';
 import 'initial_page.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -16,25 +17,35 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _currentIndex = 0;
 
-  final List<Widget> _children = [
+  late NavigationController _navigationController;
+
+  final List<Widget> _pages = [
     const InitialPage(),
     const RoutesPage(),
     const StationsPage(),
   ];
 
-  void onTabTapped(int index) {
-    setState(() {
-      _currentIndex = index;
-    });
+  @override
+  void initState() {
+    super.initState();
+    _navigationController = NavigationController();
+    _navigationController.setup(
+      initialIndex: 0,
+      onPageChanged: (index) {
+        setState(() {
+          // Atualize o estado do widget pai conforme necessário
+        });
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: _children[_currentIndex],
+        body: _pages[_navigationController.currentIndex],
         bottomNavigationBar: BottomNavigationBar(
-          onTap: onTabTapped,
-          currentIndex: _currentIndex,
+          onTap: _navigationController.navigateToPage,
+          currentIndex: _navigationController.currentIndex,
           items: const [
             BottomNavigationBarItem(
               icon: Icon(Icons.home),
