@@ -91,7 +91,7 @@ class AStar {
               (weigth[2] * travelTimeToDestination);
 
           // Armazenando avaliação da conexão i
-          accumCost[nodeConnection] = costToConn;
+          accumCost[nodeConnection] = accumCost[currentNode]! + costToConn;
 
           // Definindo melhor estação anterior da conexão i
           if (!previousStation.containsKey(nodeConnection) ||
