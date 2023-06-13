@@ -36,11 +36,10 @@ class AStar {
     graph.add(graphValue.clearGraph(graphValue));
 
     // Ajustando pesos
-    double totalWeigth = weigth[0] + weigth[1] + weigth[2];
+    double totalWeigth = weigth[0] + weigth[1];
     if (totalWeigth > 0) {
       weigth[0] /= totalWeigth;
       weigth[1] /= totalWeigth;
-      weigth[2] /= totalWeigth;
     }
 
     bool found = false;
@@ -69,26 +68,13 @@ class AStar {
           double travelTimeToDestination = distanceToDestination / speed;
           double travelTimeToConn = distanceToConn / speed;
 
-          /* O valor da penalidade por troca de linha considera a média
-             entre o valor da distância e do tempo de viagem */
-          double lineChangeDestination = 0.0, lineChangeConn = 0.0;
-          if (currentNode.line != nodeConnection.line) {
-            lineChangeDestination =
-                (distanceToDestination + travelTimeToDestination) / 2.0;
-            lineChangeConn = (distanceToConn + travelTimeToConn) / 2.0;
-          }
+          double costToConn = distanceToConn + travelTimeToConn;
 
-          double costToConn =
-              distanceToConn + lineChangeConn + travelTimeToConn;
-
-          /* Função de avaliação da conexão i. Considera-se: custo acumulado até
-          o nó pai, custo do no pai até o nó descoberto e heurísticas com pesos
-          */
+          // Função de avaliação da conexão i
           double evaluation = accumCost[currentNode]! +
               costToConn +
               (weigth[0] * distanceToDestination) +
-              (weigth[1] * lineChangeDestination) +
-              (weigth[2] * travelTimeToDestination);
+              (weigth[1] * travelTimeToDestination);
 
           // Armazenando avaliação da conexão i
           accumCost[nodeConnection] = accumCost[currentNode]! + costToConn;
