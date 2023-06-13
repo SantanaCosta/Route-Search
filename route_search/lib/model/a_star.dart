@@ -68,8 +68,16 @@ class AStar {
           double travelTimeToDestination = distanceToDestination / speed;
           double travelTimeToConn = distanceToConn / speed;
 
-          double costToConn =
-              (weigth[0] * distanceToConn) + (weigth[1] * travelTimeToConn);
+          double lineChangeDestination = 0.0, lineChangeConn = 0.0;
+          if (currentNode.line != nodeConnection.line) {
+            lineChangeDestination =
+                (distanceToDestination + travelTimeToDestination) / 2.0;
+            lineChangeConn = (distanceToConn + travelTimeToConn) / 2.0;
+          }
+
+          double costToConn = (weigth[0] * distanceToConn) +
+              (weigth[1] * travelTimeToConn) +
+              (weigth[2] * lineChangeConn);
 
           print(currentNode.name +
               " to " +
@@ -81,7 +89,8 @@ class AStar {
           double evaluation = accumCost[currentNode]! +
               costToConn +
               (weigth[0] * distanceToDestination) +
-              (weigth[1] * travelTimeToDestination);
+              (weigth[1] * travelTimeToDestination) +
+              (weigth[2] * lineChangeDestination);
 
           print("f(" +
               nodeConnection.name +
