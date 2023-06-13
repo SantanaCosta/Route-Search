@@ -66,21 +66,32 @@ class AStar {
           double distanceToConn = currentNode.distanceTo(nodeConnection);
 
           if (currentNode.getConnections[i].type == 1) speed *= 1.5;
-          double travelTime = currentNode.distanceTo(nodeConnection) / speed;
+          double travelTimeToDestination = distanceToDestination / speed;
+          double travelTimeToConn = distanceToConn / speed;
 
-          double lineChange = 0.0;
+          /* O valor da penalidade por troca de linha considera a média
+             entre o valor da distância e do tempo de viagem */
+          double lineChangeDestination = 0.0, lineChangeConn = 0.0;
           if (currentNode.line != nodeConnection.line) {
-            lineChange = (distanceToConn + travelTime) / 2.0;
+            lineChangeDestination =
+                (distanceToDestination + travelTimeToDestination) / 2.0;
+            lineChangeConn = (distanceToConn + travelTimeToConn) / 2.0;
           }
 
-          // Função de avaliação da conexão i
+          double costToConn =
+              distanceToConn + lineChangeConn + travelTimeToConn;
+
+          /* Função de avaliação da conexão i. Considera-se: custo acumulado até
+          o nó pai, custo do no pai até o nó descoberto e heurísticas com pesos
+          */
           double evaluation = accumCost[currentNode]! +
+              costToConn +
               (weigth[0] * distanceToDestination) +
-              (weigth[1] * lineChange) +
-              (weigth[2] * travelTime);
+              (weigth[1] * lineChangeDestination) +
+              (weigth[2] * travelTimeToDestination);
 
           // Armazenando avaliação da conexão i
-          accumCost[nodeConnection] = evaluation;
+          accumCost[nodeConnection] = costToConn;
 
           // Definindo melhor estação anterior da conexão i
           if (!previousStation.containsKey(nodeConnection) ||
