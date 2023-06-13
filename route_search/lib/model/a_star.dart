@@ -24,6 +24,7 @@ class AStar {
     List<Station> closed = [];
     Map<Station, Station?> previousStation = {};
     Map<Station, double> accumCost = {};
+    Map<Station, double> stationEvaluation = {};
     List<Station> route = [];
 
     Station? currentNode = stationCollection.getStationByName(originName);
@@ -48,6 +49,7 @@ class AStar {
     closed.add(currentNode);
     previousStation[currentNode] = null;
     accumCost[currentNode] = 0;
+    stationEvaluation[currentNode] = 0;
 
     // Pintando o primeiro nó
     graphValue.vertices[graphValue.getIndexByLabel(currentNode.name)].color =
@@ -79,6 +81,8 @@ class AStar {
               (weigth[0] * distanceToDestination) +
               (weigth[1] * travelTimeToDestination);
 
+          stationEvaluation[nodeConnection] = evaluation;
+
           // Definindo melhor estação anterior da conexão i
           if (!previousStation.containsKey(nodeConnection) ||
               accumCost[previousStation[nodeConnection]]! < evaluation) {
@@ -92,7 +96,8 @@ class AStar {
 
           // Ordenando lista de abertos conforme avaliações
           if (openNodes.length > 1) {
-            openNodes.sort((a, b) => (accumCost[a]!.compareTo(accumCost[b]!)));
+            openNodes.sort((a, b) =>
+                (stationEvaluation[a]!.compareTo(stationEvaluation[b]!)));
           }
         }
       }
