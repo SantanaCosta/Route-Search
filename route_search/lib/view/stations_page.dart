@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:route_search/bloc/auth.dart';
 import 'package:route_search/bloc/monitor.dart';
 import 'package:route_search/model/stationcollection.dart';
 
@@ -16,10 +17,20 @@ class StationsPage extends StatefulWidget {
 }
 
 class _StationsPageState extends State<StationsPage> {
+  final bloc = AuthBloc();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          actions: [
+            IconButton(
+                icon: const Icon(Icons.logout_outlined),
+                onPressed: () {
+                  BlocProvider.of<AuthBloc>(context).add(Logout());
+                  bloc.stream.listen((event) => {});
+                }),
+          ],
           title: const Text(
             "Estações",
             style: TextStyle(
