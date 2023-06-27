@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:route_search/bloc/auth.dart';
 import 'package:route_search/view/home_page.dart';
 import 'package:route_search/view/lists_page.dart';
 import 'bloc/manage_bloc.dart';
@@ -26,6 +27,7 @@ class MyApp extends StatelessWidget {
         providers: [
           BlocProvider(create: (_) => ManageBloc()),
           BlocProvider(create: (_) => MonitorBloc()),
+          BlocProvider(create: (_) => AuthBloc()),
         ],
         child: BlocListener<ManageBloc, ManageState>(
           listener: (context, state) {},

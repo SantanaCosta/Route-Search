@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:route_search/view/login_page.dart';
 import 'package:route_search/view/routes_page.dart';
 import 'package:route_search/view/stations_page.dart';
 
+import '../bloc/auth.dart';
 import 'initial_page.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -14,6 +16,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  final bloc = AuthBloc();
+
   int _currentIndex = 0;
 
   final List<Widget> _children = [
@@ -25,6 +29,43 @@ class _MyHomePageState extends State<MyHomePage> {
   void onTabTapped(int index) {
     setState(() {
       _currentIndex = index;
+    });
+    bloc.stream.listen((state) {
+      if (state is AuthError) {
+        showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: const Text("Erro do Firebase"),
+                content: Text(state.message),
+              );
+            });
+      } else if (state is Authenticated) {
+        setState(() {
+          _currentIndex = index;
+        });
+      } else if (state is Unauthenticated && index != 2) {
+        debugPrint("entrou");
+        setState(() {
+          _currentIndex = index;
+        });
+      } else if (state is Unauthenticated && index == 2) {
+        showDialog(
+            context: context,
+            builder: (context) {
+              return const AlertDialog(
+                title: Text("Login Obrigatorio"),
+                content:
+                    Text("É obrigatorio estar logado para acessar essa tela "),
+              );
+            });
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const LoginPage(),
+          ),
+        );
+      }
     });
   }
 

@@ -55,7 +55,7 @@ class _RoutesPageState extends State<RoutesPage> {
   Widget _handleGraphWidget() {
     return BlocBuilder<MonitorBloc, MonitorState>(builder: (context, state) {
       StationCollection stationCollection = state.stationCollection;
-      _graph.add(_toGraph(stationCollection));
+      _graph.add(Graph.toGraph(stationCollection));
       return InteractiveViewer(
         constrained: false,
         child: StreamBuilder<Graph>(
@@ -378,36 +378,5 @@ class _RoutesPageState extends State<RoutesPage> {
         ],
       );
     });
-  }
-
-  Graph _toGraph(StationCollection stationCollection) {
-    Graph graph = Graph.empty();
-
-    for (int i = 0; i < stationCollection.length(); i++) {
-      Station station = stationCollection.stationList[i];
-      Vertex stationVertex =
-          Vertex(label: station.name, x: station.coordX, y: station.coordY);
-
-      graph.vertices.add(stationVertex);
-
-      for (int j = 0; j < station.connections.length; j++) {
-        Station connectedStation =
-            stationCollection.getStationOfId(station.connections[j].stationId)!;
-
-        Color color = Colors.grey;
-        if (station.line == connectedStation.line) color = Colors.indigo;
-
-        graph.edges.add(Edge(
-            start: stationVertex,
-            end: Vertex(
-                label: connectedStation.name,
-                x: connectedStation.coordX,
-                y: connectedStation.coordY),
-            color: color,
-            type: station.connections[j].type));
-      }
-    }
-
-    return graph;
   }
 }
