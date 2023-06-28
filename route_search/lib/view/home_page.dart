@@ -50,9 +50,9 @@ class _MyHomePageState extends State<MyHomePage> {
           context: context,
           builder: (context) {
             return const AlertDialog(
-              title: Text("Login obrigatório"),
+              title: Text("Login Obrigatorio"),
               content: Text(
-                  "É necessário estar logado para acessar a tela de estações."),
+                  "É obrigatorio estar logado para acessar a tela de Estações"),
             );
           }).then((value) => {
             Navigator.push(
