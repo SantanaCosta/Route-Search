@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
 
 import '../bloc/auth.dart';
+import '../controler/navigationprovider.dart';
 import 'login_page.dart';
 
 class signInPage extends StatefulWidget {
@@ -14,6 +16,8 @@ class signInPage extends StatefulWidget {
 }
 
 class _signInPageState extends State<signInPage> {
+  final bloc = AuthBloc();
+
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
@@ -72,6 +76,8 @@ class _signInPageState extends State<signInPage> {
   }
 
   Widget _handleButton() {
+    final navigationProvider =
+        Provider.of<NavigationProvider>(context, listen: false);
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -81,7 +87,13 @@ class _signInPageState extends State<signInPage> {
             BlocProvider.of<AuthBloc>(context).add(RegisterUser(
                 username: _emailController.text,
                 password: _passwordController.text)),
-            Navigator.pop(context)
+            bloc.stream.listen((event) => {
+                  if (bloc.state is Authenticated)
+                    {
+                      navigationProvider.updateCurrentIndex(2, context),
+                      Navigator.pop(context)
+                    }
+                })
           },
         )
       ],
