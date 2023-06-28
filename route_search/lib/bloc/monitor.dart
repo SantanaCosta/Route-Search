@@ -22,6 +22,8 @@ class MonitorBloc extends Bloc<MonitorEvent, MonitorState> {
               key, Station.fromMap(convertedMap));
         });
       }
+
+      stationCollection.sortByName();
       add(UpdateList());
     });
     on<UpdateList>((event, Emitter emit) {

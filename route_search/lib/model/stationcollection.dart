@@ -13,6 +13,17 @@ class StationCollection {
     return idList.length;
   }
 
+  void sortByName() {
+    Map<String, Station> stationMap = Map.fromIterables(idList, stationList);
+
+    stationMap = Map.fromEntries(stationMap.entries.toList()
+      ..sort((a, b) => a.value.name.compareTo(b.value.name)));
+
+    idList = stationMap.keys.toList();
+
+    stationList = stationMap.values.toList();
+  }
+
   double getDistance(String originId, Station destination) {
     Station origin = getStationOfId(originId)!;
 
