@@ -22,7 +22,9 @@ class StationCollection {
   String getStationIdByName(String name) {
     for (int i = 0; i < stationList.length; i++) {
       //print("name $name == stationList[$i].name " + stationList[i].name + "?");
-      if (stationList[i].name == name) return idList[i];
+      if (stationList[i].name.toLowerCase() == name.toLowerCase()) {
+        return idList[i];
+      }
     }
     return "";
   }
@@ -30,7 +32,9 @@ class StationCollection {
   Station? getStationByName(String name) {
     for (int i = 0; i < stationList.length; i++) {
       //print("name $name == stationList[$i].name " + stationList[i].name + "?");
-      if (stationList[i].name == name) return stationList[i];
+      if (stationList[i].name.toLowerCase() == name.toLowerCase()) {
+        return stationList[i];
+      }
     }
     return null;
   }
