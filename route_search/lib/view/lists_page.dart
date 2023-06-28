@@ -64,11 +64,11 @@ class _ListsPageState extends State<ListsPage> {
           children: List.generate(items.length, (index) {
             return Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: List.generate(items[index].length, (subIndex) {
-                return Text(
-                  items[index][subIndex].name,
-                );
-              }),
+              children: [
+                Text(
+                  items[index].map((item) => item.name).join(', '),
+                ),
+              ],
             );
           }),
         ),
