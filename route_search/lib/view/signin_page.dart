@@ -81,9 +81,7 @@ class _signInPageState extends State<signInPage> {
             BlocProvider.of<AuthBloc>(context).add(RegisterUser(
                 username: _emailController.text,
                 password: _passwordController.text)),
-            MaterialPageRoute(
-              builder: (context) => const LoginPage(),
-            ),
+            Navigator.pop(context)
           },
         )
       ],
