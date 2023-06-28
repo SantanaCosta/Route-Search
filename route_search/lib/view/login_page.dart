@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
 import 'package:route_search/view/signin_page.dart';
 
 import '../bloc/auth.dart';
+import '../controler/navigationprovider.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -36,7 +38,7 @@ class _LoginPageState extends State<LoginPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           crossAxisAlignment: CrossAxisAlignment.center,
-          children: [_handleTextFields(), _handleButton()],
+          children: [_handleTextFields(), _handleButton(context)],
         ),
       ),
     );
@@ -88,7 +90,10 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget _handleButton() {
+  Widget _handleButton(BuildContext context) {
+    final navigationProvider =
+        Provider.of<NavigationProvider>(context, listen: false);
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -99,7 +104,11 @@ class _LoginPageState extends State<LoginPage> {
                 username: _emailController.text,
                 password: _passwordController.text)),
             bloc.stream.listen((event) => {
-                  if (bloc.state is Authenticated) {Navigator.pop(context)}
+                  if (bloc.state is Authenticated)
+                    {
+                      navigationProvider.updateCurrentIndex(2, context),
+                      Navigator.pop(context)
+                    }
                 })
           },
         )

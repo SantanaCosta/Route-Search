@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
 import 'package:route_search/bloc/auth.dart';
 import 'package:route_search/bloc/monitor.dart';
 import 'package:route_search/model/stationcollection.dart';
 
 import '../bloc/events.dart';
 import '../bloc/manage_bloc.dart';
+import '../controler/navigationprovider.dart';
 import '../model/connection.dart';
 import '../model/station.dart';
 
@@ -21,6 +23,9 @@ class _StationsPageState extends State<StationsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final navigationProvider =
+        Provider.of<NavigationProvider>(context, listen: false);
+
     return Scaffold(
         appBar: AppBar(
           actions: [
@@ -28,7 +33,7 @@ class _StationsPageState extends State<StationsPage> {
                 icon: const Icon(Icons.logout_outlined),
                 onPressed: () {
                   BlocProvider.of<AuthBloc>(context).add(Logout());
-                  bloc.stream.listen((event) => {});
+                  navigationProvider.updateCurrentIndex(1, context);
                 }),
           ],
           title: const Text(

@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
 import 'package:route_search/bloc/auth.dart';
 import 'package:route_search/view/home_page.dart';
 import 'package:route_search/view/lists_page.dart';
 import 'bloc/manage_bloc.dart';
 import 'bloc/monitor.dart';
 import 'bloc/states.dart';
+import 'controler/navigationprovider.dart';
 import 'view/station_register_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
@@ -15,7 +17,12 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => NavigationProvider(),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
