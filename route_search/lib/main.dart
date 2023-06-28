@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:route_search/bloc/auth.dart';
 import 'package:route_search/view/home_page.dart';
 import 'package:route_search/view/lists_page.dart';
+import 'package:route_search/view/signin_page.dart';
 import 'bloc/manage_bloc.dart';
 import 'bloc/monitor.dart';
 import 'bloc/states.dart';
@@ -50,6 +51,7 @@ class MyApp extends StatelessWidget {
             initialRoute: '/',
             routes: {
               '/registro': (context) => const StationRegisterPage(),
+              '/signin': (context) => const signInPage(),
             },
           ),
         ));

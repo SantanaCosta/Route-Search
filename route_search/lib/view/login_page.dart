@@ -77,14 +77,7 @@ class _LoginPageState extends State<LoginPage> {
           style: TextButton.styleFrom(
             textStyle: const TextStyle(fontSize: 20),
           ),
-          onPressed: () => {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const signInPage(),
-              ),
-            )
-          },
+          onPressed: () => {Navigator.popAndPushNamed(context, '/signin')},
           child: const Text('Cadastre-se'),
         ),
       ],
