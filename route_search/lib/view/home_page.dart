@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
 import 'package:route_search/view/login_page.dart';
 import 'package:route_search/view/routes_page.dart';
 import 'package:route_search/view/stations_page.dart';
 
 import '../bloc/auth.dart';
+import '../controler/navigationprovider.dart';
 import 'initial_page.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -17,9 +19,10 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final bloc = AuthBloc();
+  final GlobalKey<_MyHomePageState> bottomNavControllerKey =
+      GlobalKey<_MyHomePageState>();
 
-  int _currentIndex = 0;
+  final bloc = AuthBloc();
 
   final List<Widget> _children = [
     const InitialPage(),
@@ -27,69 +30,75 @@ class _MyHomePageState extends State<MyHomePage> {
     const StationsPage(),
   ];
 
-  void onTabTapped(int index) {
-    if (bloc.state is AuthError) {
-      showDialog(
-          context: context,
-          builder: (context) {
-            return const AlertDialog(
-              title: Text("Erro do Firebase"),
-            );
-          });
-    } else if (bloc.state is Authenticated) {
-      setState(() {
-        _currentIndex = index;
-      });
-    } else if (bloc.state is Unauthenticated && index != 2) {
-      debugPrint("entrou");
-      setState(() {
-        _currentIndex = index;
-      });
-    } else if (bloc.state is Unauthenticated && index == 2) {
-      showDialog(
-          context: context,
-          builder: (context) {
-            return const AlertDialog(
-              title: Text("Login obrigatório"),
-              content: Text(
-                  "É necessário estar logado para acessar a tela de estações."),
-            );
-          }).then((value) => {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const LoginPage(),
-              ),
-            )
-          });
-    }
-  }
+  // void onTabTapped(int index) {
+  //   if (bloc.state is AuthError) {
+  //     showDialog(
+  //         context: context,
+  //         builder: (context) {
+  //           return const AlertDialog(
+  //             title: Text("Erro do Firebase"),
+  //           );
+  //         });
+  //   } else if (bloc.state is Authenticated) {
+  //     setState(() {
+  //       _currentIndex = index;
+  //     });
+  //   } else if (bloc.state is Unauthenticated && index != 2) {
+  //     debugPrint("entrou");
+  //     setState(() {
+  //       _currentIndex = index;
+  //     });
+  //   } else if (bloc.state is Unauthenticated && index == 2) {
+  //     showDialog(
+  //         context: context,
+  //         builder: (context) {
+  //           return const AlertDialog(
+  //             title: Text("Login Obrigatorio"),
+  //             content: Text(
+  //                 "É obrigatorio estar logado para acessar a tela de Estações"),
+  //           );
+  //         }).then((value) => {
+  //           Navigator.push(
+  //             context,
+  //             MaterialPageRoute(
+  //               builder: (context) => const LoginPage(),
+  //             ),
+  //           )
+  //         });
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AuthBloc, AuthState>(
         listener: (context, state) => {},
         builder: (context, state) {
-          return Scaffold(
-              body: _children[_currentIndex],
-              bottomNavigationBar: BottomNavigationBar(
-                onTap: onTabTapped,
-                currentIndex: _currentIndex,
-                items: const [
-                  BottomNavigationBarItem(
-                    icon: Icon(Icons.home),
-                    label: 'Início',
-                  ),
-                  BottomNavigationBarItem(
-                    icon: Icon(Icons.map_outlined),
-                    label: 'Rotas',
-                  ),
-                  BottomNavigationBarItem(
-                    icon: Icon(Icons.train),
-                    label: 'Estações',
-                  ),
-                ],
-              ));
+          return Consumer<NavigationProvider>(
+              builder: (context, navigationProvider, _) {
+            final currentIndex = navigationProvider.currentIndex;
+
+            return Scaffold(
+                body: _children[currentIndex],
+                bottomNavigationBar: BottomNavigationBar(
+                  onTap: (index) =>
+                      navigationProvider.updateCurrentIndex(index, context),
+                  currentIndex: currentIndex,
+                  items: const [
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.home),
+                      label: 'Início',
+                    ),
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.map_outlined),
+                      label: 'Rotas',
+                    ),
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.train),
+                      label: 'Estações',
+                    ),
+                  ],
+                ));
+          });
         });
   }
 }
