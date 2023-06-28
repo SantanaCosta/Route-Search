@@ -59,6 +59,7 @@ class _signInPageState extends State<signInPage> {
           padding: const EdgeInsets.all(20.0),
           child: TextField(
             controller: _passwordController,
+            obscureText: true,
             decoration: const InputDecoration(
               contentPadding:
                   EdgeInsets.symmetric(vertical: 10, horizontal: 20),
